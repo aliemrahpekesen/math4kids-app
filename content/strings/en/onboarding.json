@@ -1,0 +1,22 @@
+{
+  "selectLanguage": "Select language",
+  "chooseLanguage": "Which language would you like?",
+  "createProfile": "New profile",
+  "nickname": "Nickname",
+  "nicknamePlaceholder": "What's your name?",
+  "chooseAvatar": "Choose your character",
+  "chooseTheme": "Choose a theme",
+  "themes": {
+    "space": "Space Adventure",
+    "jungle": "Jungle Safari",
+    "ocean": "Ocean World",
+    "candy": "Candy Land"
+  },
+  "parentEmail": "Parent email",
+  "parentEmailOptional": "Optional — stored only on this device",
+  "parentEmailDisclosure": "Your email is stored on this device only. We will never use it without asking you again — if email reports are ever enabled in a future version, you will be shown a separate consent screen at that time.",
+  "start": "Start",
+  "welcomeBack": "Welcome back",
+  "selectProfile": "Which one is you?",
+  "addNewProfile": "Add new profile"
+}
