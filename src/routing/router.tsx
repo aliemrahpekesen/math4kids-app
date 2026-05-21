@@ -9,6 +9,11 @@ import {
 import { OnboardingTheme } from '../screens/OnboardingTheme';
 import { OnboardingParentEmail } from '../screens/OnboardingParentEmail';
 import { ProfilePicker } from '../screens/ProfilePicker';
+import { Map } from '../screens/Map';
+import { LessonIntro } from '../screens/LessonIntro';
+import { LessonPractice } from '../screens/LessonPractice';
+import { LessonQuiz } from '../screens/LessonQuiz';
+import { LessonResult } from '../screens/LessonResult';
 import { ParentGate } from './ParentGate';
 import { LessonSession } from './LessonSession';
 
@@ -23,16 +28,16 @@ export const router = createBrowserRouter([
 
   { path: '/profile-picker', element: <ProfilePicker /> },
 
-  { path: '/map', element: <Placeholder title="Harita" homeLink={false} /> },
+  { path: '/map', element: <Map /> },
 
   {
     path: '/lesson/:id',
     element: <LessonSession />,
     children: [
-      { index: true, element: <Placeholder title="Ders girişi" /> },
-      { path: 'practice', element: <Placeholder title="Pratik" /> },
-      { path: 'quiz', element: <Placeholder title="Test" /> },
-      { path: 'result', element: <Placeholder title="Sonuç" /> },
+      { index: true, element: <LessonIntro /> },
+      { path: 'practice', element: <LessonPractice /> },
+      { path: 'quiz', element: <LessonQuiz /> },
+      { path: 'result', element: <LessonResult /> },
     ],
   },
 

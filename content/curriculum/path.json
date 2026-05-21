@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "levels": [
+    {
+      "id": 1,
+      "topic": "numbers-1-5",
+      "exerciseTypes": ["tap-number"],
+      "prereq": null,
+      "narrationKey": "narration.introWelcome",
+      "range": [1, 5]
+    },
+    {
+      "id": 2,
+      "topic": "counting-1-5",
+      "exerciseTypes": ["count-objects"],
+      "prereq": 1,
+      "narrationKey": "narration.introWelcome",
+      "range": [1, 5]
+    },
+    {
+      "id": 3,
+      "topic": "numbers-6-10",
+      "exerciseTypes": ["tap-number"],
+      "prereq": 2,
+      "narrationKey": "narration.introWelcome",
+      "range": [6, 10]
+    },
+    {
+      "id": 4,
+      "topic": "counting-6-10",
+      "exerciseTypes": ["count-objects"],
+      "prereq": 3,
+      "narrationKey": "narration.introWelcome",
+      "range": [6, 10]
+    },
+    {
+      "id": 5,
+      "topic": "match",
+      "exerciseTypes": ["match-quantity"],
+      "prereq": 4,
+      "narrationKey": "narration.introWelcome",
+      "range": [1, 10]
+    },
+    {
+      "id": 6,
+      "topic": "compare",
+      "exerciseTypes": ["compare"],
+      "prereq": 5,
+      "narrationKey": "narration.introWelcome",
+      "range": [1, 10]
+    },
+    {
+      "id": 7,
+      "topic": "shapes",
+      "exerciseTypes": ["shape-tap"],
+      "prereq": 6,
+      "narrationKey": "narration.introWelcome"
+    },
+    {
+      "id": 8,
+      "topic": "patterns",
+      "exerciseTypes": ["pattern-complete"],
+      "prereq": 7,
+      "narrationKey": "narration.introWelcome"
+    },
+    {
+      "id": 9,
+      "topic": "sorting",
+      "exerciseTypes": ["sort-into"],
+      "prereq": 8,
+      "narrationKey": "narration.introWelcome"
+    },
+    {
+      "id": 10,
+      "topic": "numbers-11-20",
+      "exerciseTypes": ["tap-number", "count-objects"],
+      "prereq": 9,
+      "narrationKey": "narration.introWelcome",
+      "range": [11, 20]
+    },
+    {
+      "id": 11,
+      "topic": "add",
+      "exerciseTypes": ["add-visual"],
+      "prereq": 10,
+      "narrationKey": "narration.introWelcome",
+      "range": [1, 10]
+    },
+    {
+      "id": 12,
+      "topic": "subtract",
+      "exerciseTypes": ["subtract-visual"],
+      "prereq": 11,
+      "narrationKey": "narration.introWelcome",
+      "range": [1, 10]
+    },
+    {
+      "id": 13,
+      "topic": "mixed-as",
+      "exerciseTypes": ["mixed-add-sub"],
+      "prereq": 12,
+      "narrationKey": "narration.introWelcome",
+      "range": [1, 10]
+    },
+    {
+      "id": 14,
+      "topic": "mult-foundations",
+      "exerciseTypes": ["groups-of"],
+      "prereq": 13,
+      "narrationKey": "narration.introWelcome",
+      "range": [2, 5]
+    },
+    {
+      "id": 15,
+      "topic": "div-foundations",
+      "exerciseTypes": ["share-equally"],
+      "prereq": 14,
+      "narrationKey": "narration.introWelcome",
+      "range": [2, 5]
+    },
+    {
+      "id": 16,
+      "topic": "mixed-review",
+      "exerciseTypes": ["mixed-review"],
+      "prereq": 15,
+      "narrationKey": "narration.introWelcome"
+    },
+    {
+      "id": 17,
+      "topic": "final",
+      "exerciseTypes": ["mixed-review"],
+      "prereq": 16,
+      "narrationKey": "narration.introWelcome"
+    }
+  ]
+}
