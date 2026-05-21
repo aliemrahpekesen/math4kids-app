@@ -6,6 +6,7 @@ import { useSettingsStore } from './settingsStore';
 import { repos } from '../repos';
 import { lsGet, lsSet, lsRemove } from '../persistence/localStorageDriver';
 import type { ChildProfile, Difficulty, ProfileId } from './types';
+import { DEFAULT_DIFFICULTY } from '../engines/difficulty';
 import type { AvatarKey } from '../ui';
 import type { ThemeKey } from '../themes/types';
 
@@ -75,7 +76,7 @@ export async function createProfile({
   nickname,
   avatarKey,
   themeKey,
-  difficulty = 'medium',
+  difficulty = DEFAULT_DIFFICULTY,
 }: CreateInput): Promise<ChildProfile> {
   const profiles = useProfileStore
     .getState()

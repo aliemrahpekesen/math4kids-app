@@ -1,3 +1,5 @@
+import { FINAL_LEVEL_ID } from './curriculum';
+
 const COINS_PER_STAR: Record<0 | 1 | 2 | 3, number> = {
   0: 0,
   1: 5,
@@ -5,8 +7,10 @@ const COINS_PER_STAR: Record<0 | 1 | 2 | 3, number> = {
   3: 20,
 };
 
-/** Section markers — every 4th level closes a section and unlocks a chest. */
-const SECTION_BOUNDARIES = new Set<number>([4, 9, 13, 15, 17]);
+/** Section markers — every tier-final level closes a section and unlocks a chest. */
+const SECTION_BOUNDARIES = new Set<number>([
+  9, 17, 107, 117, 207, 217,
+]);
 
 export interface RewardDelta {
   coins: number;
@@ -20,7 +24,7 @@ export function awardForStars(
 ): RewardDelta {
   const coins = COINS_PER_STAR[stars];
   const delta: RewardDelta = { coins };
-  if (stars === 3 && levelId === 17) {
+  if (stars === 3 && levelId === FINAL_LEVEL_ID) {
     delta.badge = 'final-challenge';
   }
   if (stars === 3 && SECTION_BOUNDARIES.has(levelId)) {

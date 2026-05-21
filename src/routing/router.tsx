@@ -8,8 +8,10 @@ import {
 import { OnboardingTheme } from '../screens/OnboardingTheme';
 import { OnboardingParentEmail } from '../screens/OnboardingParentEmail';
 import { ProfilePicker } from '../screens/ProfilePicker';
+import { TrackPicker } from '../screens/TrackPicker';
 import { Map } from '../screens/Map';
 import { LessonIntro } from '../screens/LessonIntro';
+import { LessonTeach } from '../screens/LessonTeach';
 import { LessonPractice } from '../screens/LessonPractice';
 import { LessonQuiz } from '../screens/LessonQuiz';
 import { LessonResult } from '../screens/LessonResult';
@@ -35,13 +37,15 @@ export const router = createBrowserRouter([
 
   { path: '/profile-picker', element: <ProfilePicker /> },
 
-  { path: '/map', element: <Map /> },
+  { path: '/map', element: <TrackPicker /> },
+  { path: '/map/:trackId', element: <Map /> },
 
   {
     path: '/lesson/:id',
     element: <LessonSession />,
     children: [
       { index: true, element: <LessonIntro /> },
+      { path: 'teach', element: <LessonTeach /> },
       { path: 'practice', element: <LessonPractice /> },
       { path: 'quiz', element: <LessonQuiz /> },
       { path: 'result', element: <LessonResult /> },
