@@ -59,6 +59,25 @@ export const useProfileStore = create<ProfileStore>((set) => ({
     set({ activeProfileId, profiles }),
 }));
 
+/**
+ * Filter out soft-deleted profiles.
+ *
+ * ⚠️  DO NOT call this INSIDE a Zustand selector
+ *     ❌ `useProfileStore((s) => listVisibleProfiles(s.profiles))`
+ *     `.filter` returns a new array each call → React detects a state change
+ *     on every render → infinite re-render loop ("Maximum update depth exceeded").
+ *
+ * ✅  Correct: select the raw array, then filter in the render body.
+ *     ```ts
+ *     const allProfiles = useProfileStore((s) => s.profiles);
+ *     const profiles = listVisibleProfiles(allProfiles);
+ *     ```
+ *
+ * The same rule applies to ANY selector that returns a freshly-built
+ * collection (`.filter`, `.map`, `.slice`, `Object.entries`, etc.). Either
+ * select the raw reference and derive in the body, OR wrap the selector with
+ * `useShallow` from `zustand/react/shallow` if a primitive can't represent it.
+ */
 export function listVisibleProfiles(profiles: ChildProfile[]): ChildProfile[] {
   return profiles.filter((p) => !p.deletedAt);
 }

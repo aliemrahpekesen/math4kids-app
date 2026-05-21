@@ -12,7 +12,10 @@ import type { ProfileId } from '../state/types';
 export function ProfilePicker() {
   const navigate = useNavigate();
   const { t } = useTranslation('onboarding');
-  const profiles = useProfileStore((s) => listVisibleProfiles(s.profiles));
+  // Zustand: select raw array (reference-stable) and filter in render body.
+  // Filtering inside the selector returns a NEW array each call → infinite re-render.
+  const allProfiles = useProfileStore((s) => s.profiles);
+  const profiles = listVisibleProfiles(allProfiles);
 
   const pick = (id: ProfileId) => {
     void (async () => {
