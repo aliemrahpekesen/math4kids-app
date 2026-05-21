@@ -1,0 +1,22 @@
+{
+  "selectLanguage": "Dil seç",
+  "chooseLanguage": "Hangi dili kullanmak istersin?",
+  "createProfile": "Yeni profil",
+  "nickname": "Takma ad",
+  "nicknamePlaceholder": "Adın ne olsun?",
+  "chooseAvatar": "Karakter seç",
+  "chooseTheme": "Tema seç",
+  "themes": {
+    "space": "Uzay Macerası",
+    "jungle": "Orman Safari",
+    "ocean": "Okyanus Dünyası",
+    "candy": "Şeker Diyarı"
+  },
+  "parentEmail": "Ebeveyn e-postası",
+  "parentEmailOptional": "Opsiyonel — sadece bu cihazda saklanır",
+  "parentEmailDisclosure": "E-postanız sadece bu cihazda saklanır. Sizden tekrar onay almadan asla kullanılmayacak — eğer ileride e-posta raporları açılırsa, o zaman ayrı bir onay ekranı göreceksiniz.",
+  "start": "Başla",
+  "welcomeBack": "Tekrar hoş geldin",
+  "selectProfile": "Hangi profil senin?",
+  "addNewProfile": "Yeni profil ekle"
+}

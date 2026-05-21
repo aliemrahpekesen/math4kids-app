@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { App } from './App';
 import { runMigrations } from './persistence/migrate';
 import { hydrateFromRepos } from './state/profileActions';
+import { initI18n } from './i18n/setup';
 import './index.css';
 
 const rootElement = document.getElementById('root');
@@ -14,9 +15,8 @@ async function boot(): Promise<void> {
   try {
     await runMigrations();
     await hydrateFromRepos();
+    await initI18n();
   } catch (err) {
-    // MigrationError surfaces through the error boundary; other errors
-    // logged but render proceeds.
     console.error('[boot]', err);
   }
 }

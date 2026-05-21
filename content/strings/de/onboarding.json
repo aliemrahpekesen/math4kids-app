@@ -1,0 +1,22 @@
+{
+  "selectLanguage": "Sprache wählen",
+  "chooseLanguage": "Welche Sprache möchtest du?",
+  "createProfile": "Neues Profil",
+  "nickname": "Spitzname",
+  "nicknamePlaceholder": "Wie heißt du?",
+  "chooseAvatar": "Wähle deinen Charakter",
+  "chooseTheme": "Wähle ein Thema",
+  "themes": {
+    "space": "Weltraum-Abenteuer",
+    "jungle": "Dschungel-Safari",
+    "ocean": "Ozean-Welt",
+    "candy": "Süßigkeitenland"
+  },
+  "parentEmail": "E-Mail der Eltern",
+  "parentEmailOptional": "Optional — nur auf diesem Gerät gespeichert",
+  "parentEmailDisclosure": "Deine E-Mail wird nur auf diesem Gerät gespeichert. Wir werden sie niemals verwenden, ohne dich erneut zu fragen — falls in einer zukünftigen Version E-Mail-Berichte aktiviert werden, siehst du dann einen separaten Einwilligungsbildschirm.",
+  "start": "Los",
+  "welcomeBack": "Willkommen zurück",
+  "selectProfile": "Welches Profil bist du?",
+  "addNewProfile": "Neues Profil hinzufügen"
+}
