@@ -1,56 +1,79 @@
-/* Reset + base layer. Tailwind will be wired in T-007. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Token defaults — overridden at runtime by ThemeProvider from
+ * content/themes/<key>/tokens.json. The static values here are the Space
+ * palette so cold boot before React mounts already looks right. */
 
 :root {
-  --color-bg: #f8fafc;
-  --color-fg: #0b1437;
-  --color-accent: #6366f1;
-  color-scheme: light;
-  font-family:
-    system-ui,
-    -apple-system,
-    'Segoe UI',
-    Roboto,
-    Helvetica,
-    Arial,
-    sans-serif;
+  --color-bg: #0b1437;
+  --color-surface: #1a2356;
+  --color-primary: #7c3aed;
+  --color-primary-fg: #ffffff;
+  --color-accent: #facc15;
+  --color-accent-fg: #1a2356;
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-danger: #f87171;
+  --color-fg: #e0e7ff;
+  --color-muted: #94a3b8;
+  --color-star-filled: #fde047;
+  --color-star-empty: #475569;
+  --radius-soft: 1.25rem;
+  --radius-round: 9999px;
+  --shadow-card: 0 10px 30px -10px rgba(124, 58, 237, 0.45);
+  --shadow-glow: 0 0 24px rgba(250, 204, 21, 0.55);
+  --font-display: 'Fredoka', 'Baloo 2', system-ui, sans-serif;
+  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --motion-celebration-ms: 400;
+  --motion-transition-ms: 200;
+
+  color-scheme: dark;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    height: 100%;
+  }
+
+  body {
+    min-height: 100dvh;
+    background: var(--color-bg);
+    color: var(--color-fg);
+  }
+
+  #root {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  height: 100%;
-}
-
-body {
-  min-height: 100dvh;
-  background: var(--color-bg);
-  color: var(--color-fg);
-}
-
-#root {
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-}
-
-.app-shell {
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  text-align: center;
+@layer components {
+  .app-shell {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    text-align: center;
+    font-family: var(--font-display);
+  }
 }
