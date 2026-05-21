@@ -10,6 +10,7 @@ import { useRewardStore } from '../state/rewardStore';
 import { useProfileStore } from '../state/profileStore';
 import { repos } from '../repos';
 import { awardForStars } from '../engines/reward';
+import { useAudio } from '../audio/AudioProvider';
 
 export function LessonQuiz() {
   const { id } = useParams<{ id: string }>();
@@ -18,6 +19,7 @@ export function LessonQuiz() {
   const levelId = Number(id ?? 1);
 
   const session = useSessionStore();
+  const audio = useAudio();
   const profileId = useProfileStore((s) => s.activeProfileId);
   const recordResult = useProgressStore((s) => s.recordResult);
   const awardStars = useRewardStore((s) => s.awardForStars);
@@ -94,6 +96,7 @@ export function LessonQuiz() {
   }
 
   const onAnswer = (correct: boolean) => {
+    audio.play(correct ? 'correct' : 'wrong');
     session.recordAnswer(correct);
     setFeedback(correct ? 'correct' : 'wrong');
     setTimeout(() => {
