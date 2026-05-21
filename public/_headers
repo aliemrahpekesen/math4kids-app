@@ -1,0 +1,35 @@
+## Cloudflare Pages headers configuration
+## Plan: .specify/plan.md §7
+## ADR: 0001 (tech-stack) + 0002 (platform-targets) + 0005 (compliance, queued)
+## Posture: KVKK / GDPR-K — no third-party SDK exfiltration possible (`connect-src 'self'`).
+
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; media-src 'self'; worker-src 'self'; manifest-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  Referrer-Policy: same-origin
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Cross-Origin-Opener-Policy: same-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=(), interest-cohort=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+## Cache policy: shell + service-worker must NOT be edge-cached (plan.md R4)
+
+/
+  Cache-Control: no-cache
+
+/index.html
+  Cache-Control: no-cache
+
+/sw.js
+  Cache-Control: no-cache
+
+/manifest.webmanifest
+  Cache-Control: no-cache
+
+## Hashed assets — Vite emits content-hashed filenames under /assets/
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+## Curriculum / locale JSON — until Vite hash-names content files, use no-cache as a fallback
+/content/*
+  Cache-Control: no-cache
