@@ -1,0 +1,36 @@
+{
+  "name": "math4kids-app",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Mobile-first browser-based gamified math learning app for ages 4–6 (Turkish/English/German)",
+  "license": "MIT",
+  "author": "Ali Emrah Pekesen",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aliemrahpekesen/math4kids-app.git"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --max-warnings=0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "e2e": "playwright test",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10"
+  }
+}
