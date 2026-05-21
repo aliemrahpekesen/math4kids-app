@@ -32,13 +32,22 @@ export type TopicKey =
   | 'mixed-review'
   | 'final';
 
+export type TrackId = 'numbers' | 'operations';
+
 export interface LevelDescriptor {
   id: number;
+  track: TrackId;
   topic: TopicKey;
   exerciseTypes: ExerciseTypeKey[];
   prereq: number | null;
   narrationKey: string;
   range?: [number, number];
+}
+
+export interface TrackDescriptor {
+  id: TrackId;
+  labelKey: string;
+  order: number;
 }
 
 export interface Exercise {

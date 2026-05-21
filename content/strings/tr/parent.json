@@ -5,6 +5,11 @@
   "confirmPin": "PIN'i tekrar gir",
   "wrongPin": "Yanlış PIN",
   "cooldown": "{{seconds}} saniye bekle",
+  "forgotPinLink": "PIN'i unuttum",
+  "forgotPinTitle": "PIN sıfırlama",
+  "forgotPinInstructions": "Bu işlemi sadece bir yetişkin çözebilir. Doğru cevabı girin, yeni PIN belirleyin.",
+  "forgotPinAnswer": "Sonuç",
+  "forgotPinWrongAnswer": "Yanlış sonuç. Tekrar deneyin.",
   "dashboard": "Ebeveyn paneli",
   "progress": "İlerleme",
   "totalStars": "Toplam yıldız",
@@ -31,5 +36,14 @@
   "resetProgressConfirm": "Tüm ilerleme silinecek. Emin misin?",
   "fullWipe": "Tüm verileri sil",
   "fullWipeConfirm": "Bu cihazdaki TÜM profiller ve ilerlemeler silinecek. Emin misin?",
-  "exitParentArea": "Ebeveyn alanından çık"
+  "exitParentArea": "Ebeveyn alanından çık",
+  "difficultyLabel": "{{name}} için zorluk",
+  "difficulty": {
+    "easy": "Kolay",
+    "medium": "Orta",
+    "hard": "Zor",
+    "easyHint": "4 soruluk kısa testler, ipucu serbest, 3 yıldız için %70 doğru yeterli.",
+    "mediumHint": "6 soruluk testler, 1 ipucu serbest, 3 yıldız için %85 doğru.",
+    "hardHint": "8 soruluk testler, ipucu yok, 3 yıldız için %95 doğru."
+  }
 }

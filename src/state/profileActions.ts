@@ -5,7 +5,7 @@ import { useRewardStore } from './rewardStore';
 import { useSettingsStore } from './settingsStore';
 import { repos } from '../repos';
 import { lsGet, lsSet, lsRemove } from '../persistence/localStorageDriver';
-import type { ChildProfile, ProfileId } from './types';
+import type { ChildProfile, Difficulty, ProfileId } from './types';
 import type { AvatarKey } from '../ui';
 import type { ThemeKey } from '../themes/types';
 
@@ -13,7 +13,12 @@ import type { ThemeKey } from '../themes/types';
  * Hydrate from repos at app boot. Idempotent; safe to call multiple times.
  */
 export async function hydrateFromRepos(): Promise<void> {
-  const all = await repos.profile.list();
+  const rawAll = await repos.profile.list();
+  // Migrate old profiles that pre-date the difficulty field.
+  const all = rawAll.map((p) => ({
+    ...p,
+    difficulty: p.difficulty ?? ('medium' as const),
+  }));
   const activeId = lsGet<ProfileId>('activeProfileId');
   useProfileStore.getState().hydrate({
     activeProfileId: activeId,
@@ -22,6 +27,18 @@ export async function hydrateFromRepos(): Promise<void> {
 
   if (activeId) {
     await hydrateProfileScopedStores(activeId);
+  }
+
+  // Reflect "PIN was set on a previous session" so the gate boots into
+  // VERIFY mode instead of SET mode after refresh / install.
+  const auth = await repos.settings.loadParentAuth();
+  if (auth?.pinHash) {
+    useSettingsStore.getState().setParentPinSet(true);
+  }
+
+  // Reflect any saved parent email so settings + email-preview show it.
+  if (auth?.email) {
+    useSettingsStore.getState().setParentEmail(auth.email);
   }
 }
 
@@ -51,12 +68,14 @@ interface CreateInput {
   nickname: string;
   avatarKey: AvatarKey;
   themeKey: ThemeKey;
+  difficulty?: Difficulty;
 }
 
 export async function createProfile({
   nickname,
   avatarKey,
   themeKey,
+  difficulty = 'medium',
 }: CreateInput): Promise<ChildProfile> {
   const profiles = useProfileStore
     .getState()
@@ -70,6 +89,7 @@ export async function createProfile({
     nickname,
     avatarKey,
     themeKey,
+    difficulty,
     createdAt: now,
     version: 1,
     updatedAt: now,
@@ -98,6 +118,23 @@ export async function renameProfile(
   useProfileStore.getState().rename(id, nickname);
   const updated = useProfileStore.getState().profiles.find((p) => p.id === id);
   if (updated) await repos.profile.save(updated);
+}
+
+export async function setProfileDifficulty(
+  id: ProfileId,
+  difficulty: Difficulty
+): Promise<void> {
+  const current = useProfileStore.getState().profiles.find((p) => p.id === id);
+  if (!current) return;
+  const updated: ChildProfile = {
+    ...current,
+    difficulty,
+    version: current.version + 1,
+    updatedAt: new Date().toISOString(),
+    dirty: true,
+  };
+  useProfileStore.getState().upsert(updated);
+  await repos.profile.save(updated);
 }
 
 export async function deleteProfile(id: ProfileId): Promise<void> {

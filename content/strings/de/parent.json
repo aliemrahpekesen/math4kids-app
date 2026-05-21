@@ -5,6 +5,11 @@
   "confirmPin": "PIN wiederholen",
   "wrongPin": "Falsche PIN",
   "cooldown": "{{seconds}} Sekunden warten",
+  "forgotPinLink": "PIN vergessen",
+  "forgotPinTitle": "PIN zurücksetzen",
+  "forgotPinInstructions": "Nur Erwachsene können dies lösen. Gib das richtige Ergebnis ein, dann lege eine neue PIN fest.",
+  "forgotPinAnswer": "Antwort",
+  "forgotPinWrongAnswer": "Falsche Antwort. Erneut versuchen.",
   "dashboard": "Eltern-Dashboard",
   "progress": "Fortschritt",
   "totalStars": "Sterne insgesamt",
@@ -31,5 +36,14 @@
   "resetProgressConfirm": "Aller Fortschritt wird gelöscht. Bist du sicher?",
   "fullWipe": "Alle Daten löschen",
   "fullWipeConfirm": "ALLE Profile und Fortschritte auf diesem Gerät werden gelöscht. Sicher?",
-  "exitParentArea": "Eltern-Bereich verlassen"
+  "exitParentArea": "Eltern-Bereich verlassen",
+  "difficultyLabel": "Schwierigkeit für {{name}}",
+  "difficulty": {
+    "easy": "Leicht",
+    "medium": "Mittel",
+    "hard": "Schwer",
+    "easyHint": "Quizze mit 4 Fragen, Hilfen erlaubt; 70% Genauigkeit ergibt 3 Sterne.",
+    "mediumHint": "Quizze mit 6 Fragen, 1 Hilfe; 85% Genauigkeit ergibt 3 Sterne.",
+    "hardHint": "Quizze mit 8 Fragen, keine Hilfen; 95% Genauigkeit ergibt 3 Sterne."
+  }
 }

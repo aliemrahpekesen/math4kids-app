@@ -11,6 +11,8 @@ import { useProfileStore } from '../state/profileStore';
 import { repos } from '../repos';
 import { awardForStars } from '../engines/reward';
 import { useAudio } from '../audio/AudioProvider';
+import { DEFAULT_DIFFICULTY } from '../engines/difficulty';
+import type { Difficulty } from '../state/types';
 
 export function LessonQuiz() {
   const { id } = useParams<{ id: string }>();
@@ -21,13 +23,21 @@ export function LessonQuiz() {
   const session = useSessionStore();
   const audio = useAudio();
   const profileId = useProfileStore((s) => s.activeProfileId);
+  const difficulty: Difficulty = useProfileStore(
+    (s) =>
+      s.profiles.find((p) => p.id === s.activeProfileId)?.difficulty ??
+      DEFAULT_DIFFICULTY
+  );
   const recordResult = useProgressStore((s) => s.recordResult);
   const awardStars = useRewardStore((s) => s.awardForStars);
   const earnBadge = useRewardStore((s) => s.earnBadge);
   const unlockChest = useRewardStore((s) => s.unlockChest);
 
   const seed = useMemo(() => 9000 + levelId, [levelId]);
-  const quiz = useMemo(() => buildQuiz(levelId, seed), [levelId, seed]);
+  const quiz = useMemo(
+    () => buildQuiz(levelId, seed, difficulty),
+    [levelId, seed, difficulty]
+  );
 
   const [index, setIndex] = useState(0);
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
@@ -36,7 +46,7 @@ export function LessonQuiz() {
   useEffect(() => {
     if (!done) return;
     const answers = session.lessonAnswers;
-    const result = score(answers, session.lessonHintsUsed);
+    const result = score(answers, session.lessonHintsUsed, difficulty);
     const elapsedMs = session.lessonStartedAt
       ? Date.now() - session.lessonStartedAt
       : 0;
@@ -48,6 +58,7 @@ export function LessonQuiz() {
         accuracy: result.accuracy,
         hintsUsed: session.lessonHintsUsed,
         elapsedMs,
+        difficulty,
       });
       const delta = awardForStars(stars, levelId);
       awardStars(stars);
@@ -80,6 +91,7 @@ export function LessonQuiz() {
     awardStars,
     earnBadge,
     unlockChest,
+    difficulty,
     session.lessonAnswers,
     session.lessonHintsUsed,
     session.lessonStartedAt,

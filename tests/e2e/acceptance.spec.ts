@@ -74,7 +74,8 @@ test.describe('Math4KidsApp — Acceptance Criteria (AC-01..AC-18)', () => {
     await page.getByRole('button', { name: /atla/i }).click();
     // Should land on map
     await page.waitForURL('**/map');
-    await expect(page.getByText(/harita/i)).toBeVisible();
+    // Track section heading proves the new two-track map rendered.
+    await expect(page.getByText(/Sayılar/i)).toBeVisible();
     // L1 button enabled (regex anchored to "Level 1 —" so it doesn't match L10/L11)
     const l1 = page.getByRole('button', { name: /^Level 1 [—-]/ });
     await expect(l1).toBeEnabled();

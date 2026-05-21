@@ -1,4 +1,8 @@
 {
+  "tracks": {
+    "numbers": "🔢 Zahlen",
+    "operations": "➕ Rechnen"
+  },
   "intro": "Neue Lektion",
   "practice": "Übung",
   "quiz": "Quiz",

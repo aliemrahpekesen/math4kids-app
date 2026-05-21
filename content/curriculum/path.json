@@ -1,8 +1,13 @@
 {
-  "version": 1,
+  "version": 2,
+  "tracks": [
+    { "id": "numbers", "labelKey": "tracks.numbers", "order": 1 },
+    { "id": "operations", "labelKey": "tracks.operations", "order": 2 }
+  ],
   "levels": [
     {
       "id": 1,
+      "track": "numbers",
       "topic": "numbers-1-5",
       "exerciseTypes": ["tap-number"],
       "prereq": null,
@@ -11,6 +16,7 @@
     },
     {
       "id": 2,
+      "track": "numbers",
       "topic": "counting-1-5",
       "exerciseTypes": ["count-objects"],
       "prereq": 1,
@@ -19,6 +25,7 @@
     },
     {
       "id": 3,
+      "track": "numbers",
       "topic": "numbers-6-10",
       "exerciseTypes": ["tap-number"],
       "prereq": 2,
@@ -27,6 +34,7 @@
     },
     {
       "id": 4,
+      "track": "numbers",
       "topic": "counting-6-10",
       "exerciseTypes": ["count-objects"],
       "prereq": 3,
@@ -35,6 +43,7 @@
     },
     {
       "id": 5,
+      "track": "numbers",
       "topic": "match",
       "exerciseTypes": ["match-quantity"],
       "prereq": 4,
@@ -43,6 +52,7 @@
     },
     {
       "id": 6,
+      "track": "numbers",
       "topic": "compare",
       "exerciseTypes": ["compare"],
       "prereq": 5,
@@ -51,6 +61,7 @@
     },
     {
       "id": 7,
+      "track": "numbers",
       "topic": "shapes",
       "exerciseTypes": ["shape-tap"],
       "prereq": 6,
@@ -58,6 +69,7 @@
     },
     {
       "id": 8,
+      "track": "numbers",
       "topic": "patterns",
       "exerciseTypes": ["pattern-complete"],
       "prereq": 7,
@@ -65,6 +77,7 @@
     },
     {
       "id": 9,
+      "track": "numbers",
       "topic": "sorting",
       "exerciseTypes": ["sort-into"],
       "prereq": 8,
@@ -72,22 +85,26 @@
     },
     {
       "id": 10,
+      "track": "numbers",
       "topic": "numbers-11-20",
       "exerciseTypes": ["tap-number", "count-objects"],
       "prereq": 9,
       "narrationKey": "narration.introWelcome",
       "range": [11, 20]
     },
+
     {
       "id": 11,
+      "track": "operations",
       "topic": "add",
       "exerciseTypes": ["add-visual"],
-      "prereq": 10,
+      "prereq": null,
       "narrationKey": "narration.introWelcome",
       "range": [1, 10]
     },
     {
       "id": 12,
+      "track": "operations",
       "topic": "subtract",
       "exerciseTypes": ["subtract-visual"],
       "prereq": 11,
@@ -96,6 +113,7 @@
     },
     {
       "id": 13,
+      "track": "operations",
       "topic": "mixed-as",
       "exerciseTypes": ["mixed-add-sub"],
       "prereq": 12,
@@ -104,6 +122,7 @@
     },
     {
       "id": 14,
+      "track": "operations",
       "topic": "mult-foundations",
       "exerciseTypes": ["groups-of"],
       "prereq": 13,
@@ -112,6 +131,7 @@
     },
     {
       "id": 15,
+      "track": "operations",
       "topic": "div-foundations",
       "exerciseTypes": ["share-equally"],
       "prereq": 14,
@@ -120,6 +140,7 @@
     },
     {
       "id": 16,
+      "track": "operations",
       "topic": "mixed-review",
       "exerciseTypes": ["mixed-review"],
       "prereq": 15,
@@ -127,6 +148,7 @@
     },
     {
       "id": 17,
+      "track": "operations",
       "topic": "final",
       "exerciseTypes": ["mixed-review"],
       "prereq": 16,
