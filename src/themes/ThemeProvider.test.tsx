@@ -7,7 +7,7 @@ function Probe() {
   return (
     <div>
       <span data-testid="theme-key">{key}</span>
-      <span data-testid="primary">{tokens.tokens.color.primary}</span>
+      <span data-testid="accent">{tokens.tokens.color.accent}</span>
       <span data-testid="name-tr">{tokens.name.tr}</span>
     </div>
   );
@@ -29,9 +29,9 @@ describe('<ThemeProvider />', () => {
         <Probe />
       </ThemeProvider>
     );
-    // Space primary is purple #7c3aed per tokens.json
-    expect(screen.getByTestId('primary').textContent).toBe('#7c3aed');
-    expect(screen.getByTestId('name-tr').textContent).toBe('Uzay Macerası');
+    // Space accent is the design's #7C3AED.
+    expect(screen.getByTestId('accent').textContent?.toLowerCase()).toBe('#7c3aed');
+    expect(screen.getByTestId('name-tr').textContent).toBe('Uzay');
   });
 
   it('applies CSS custom properties to :root', () => {
@@ -41,7 +41,7 @@ describe('<ThemeProvider />', () => {
       </ThemeProvider>
     );
     const value =
-      document.documentElement.style.getPropertyValue('--color-primary');
-    expect(value).toBe('#7c3aed');
+      document.documentElement.style.getPropertyValue('--color-accent');
+    expect(value.toLowerCase()).toBe('#7c3aed');
   });
 });

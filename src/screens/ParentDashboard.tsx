@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Button, Card, StarRow, CoinBadge } from '../ui';
 import { useProgressStore } from '../state/progressStore';
 import { useRewardStore } from '../state/rewardStore';
 import { useProfileStore } from '../state/profileStore';
 import { useSessionStore } from '../state/sessionStore';
 import { getCurriculum } from '../engines/curriculum';
 import { exitToHome } from '../routing/exitToHome';
+import { CharacterAvatar } from '../ui';
 
 function formatTime(ms: number): string {
   const total = Math.floor(ms / 1000);
@@ -14,6 +14,95 @@ function formatTime(ms: number): string {
   const m = Math.floor((total % 3600) / 60);
   if (h > 0) return `${h}s ${m}d`;
   return `${m}d`;
+}
+
+interface StatBoxProps {
+  value: string | number;
+  label: string;
+}
+
+function StatBox({ value, label }: StatBoxProps) {
+  return (
+    <div
+      style={{
+        background: '#fff',
+        borderRadius: 12,
+        padding: '10px 12px',
+        border: '1px solid #E2E8F0',
+      }}
+    >
+      <div
+        style={{
+          fontSize: 22,
+          fontWeight: 700,
+          color: '#0F172A',
+          fontVariantNumeric: 'tabular-nums',
+          lineHeight: 1.1,
+        }}
+      >
+        {value}
+      </div>
+      <div
+        style={{
+          fontSize: 11,
+          color: '#64748B',
+          marginTop: 2,
+        }}
+      >
+        {label}
+      </div>
+    </div>
+  );
+}
+
+interface RowProps {
+  icon: string;
+  label: string;
+  onClick: () => void;
+  danger?: boolean;
+}
+
+function Row({ icon, label, onClick, danger = false }: RowProps) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        appearance: 'none',
+        background: 'transparent',
+        border: 'none',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 12,
+        padding: '12px 14px',
+        textAlign: 'left',
+        color: danger ? '#DC2626' : '#0F172A',
+        fontSize: 14,
+        fontWeight: 600,
+        width: '100%',
+        borderBottom: '1px solid #F1F5F9',
+      }}
+    >
+      <span
+        style={{
+          width: 28,
+          height: 28,
+          background: '#F1F5F9',
+          borderRadius: 8,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: 16,
+        }}
+        aria-hidden="true"
+      >
+        {icon}
+      </span>
+      <span style={{ flex: 1 }}>{label}</span>
+      <span style={{ color: '#CBD5E1' }}>›</span>
+    </button>
+  );
 }
 
 export function ParentDashboard() {
@@ -39,129 +128,219 @@ export function ParentDashboard() {
     (p) => (p?.bestStars ?? 0) === 3
   ).length;
 
-  // Strong topics: 3-star levels; weak: levels played but < 3★
-  const strong = levels
-    .filter((lvl) => (progress[lvl.id]?.bestStars ?? 0) === 3)
-    .slice(0, 3)
-    .map((lvl) => lvl.id);
-  const weak = levels
-    .filter((lvl) => {
-      const p = progress[lvl.id];
-      return p && p.bestStars < 3;
-    })
-    .slice(0, 3)
-    .map((lvl) => lvl.id);
-
   return (
-    <main className="app-shell !justify-start !pt-6 !pb-12">
-      <div className="w-full max-w-md flex justify-between items-center mb-4">
-        <h1 className="font-display text-2xl text-primary-fg">
-          {t('dashboard')}
-        </h1>
-        <Button
-          variant="ghost"
-          onClick={() => {
-            revoke();
-            void exitToHome(navigate);
+    <div
+      style={{
+        minHeight: '100dvh',
+        background: '#F8FAFC',
+        fontFamily: 'var(--font-body)',
+      }}
+    >
+      {/* Top bar */}
+      <div
+        style={{
+          background: '#fff',
+          padding: '64px 18px 14px',
+          borderBottom: '1px solid #E2E8F0',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+            marginBottom: 12,
           }}
         >
-          {t('exitParentArea')}
-        </Button>
-      </div>
+          <button
+            type="button"
+            onClick={() => {
+              revoke();
+              void exitToHome(navigate);
+            }}
+            aria-label={t('exitParentArea')}
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: 10,
+              background: '#F1F5F9',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 18,
+            }}
+          >
+            ←
+          </button>
+          <h1
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 18,
+              fontWeight: 700,
+              color: '#0F172A',
+              margin: 0,
+              flex: 1,
+            }}
+          >
+            {t('dashboard')}
+          </h1>
+        </div>
 
-      {profile && (
-        <Card className="w-full max-w-md mb-4">
-          <p className="font-display text-lg text-fg">{profile.nickname}</p>
-          <div className="grid grid-cols-3 gap-2 mt-3 text-center">
-            <div>
-              <div className="text-2xl">⭐</div>
-              <div className="font-display text-xl">{totalStars}</div>
-              <div className="text-fg/70 text-xs">{t('totalStars')}</div>
+        {profile && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+              padding: '10px 12px',
+              background: '#F8FAFC',
+              borderRadius: 12,
+              border: '1px solid #E2E8F0',
+            }}
+          >
+            <div
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 999,
+                background: '#fff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: '1px solid #E2E8F0',
+              }}
+            >
+              <CharacterAvatar avatarKey={profile.avatarKey} size="sm" />
             </div>
-            <div>
-              <div className="text-2xl">📚</div>
-              <div className="font-display text-xl">
-                {completedLevels}/{levels.length}
-              </div>
-              <div className="text-fg/70 text-xs">{t('progress')}</div>
-            </div>
-            <div>
-              <div className="text-2xl">⏱</div>
-              <div className="font-display text-xl">
-                {formatTime(totalTimeMs)}
-              </div>
-              <div className="text-fg/70 text-xs">{t('totalTime')}</div>
-            </div>
-          </div>
-          <div className="mt-3 flex justify-center">
-            <CoinBadge count={coins} />
-          </div>
-        </Card>
-      )}
-
-      {strong.length > 0 && (
-        <Card className="w-full max-w-md mb-3">
-          <p className="font-display text-sm text-fg/70 mb-2">
-            {t('strongTopics')}
-          </p>
-          <div className="flex gap-2 flex-wrap">
-            {strong.map((id) => (
-              <span
-                key={id}
-                className="px-3 py-1 rounded-round bg-success/20 text-success font-display text-sm"
-              >
-                #{id}
-              </span>
-            ))}
-          </div>
-        </Card>
-      )}
-
-      {weak.length > 0 && (
-        <Card className="w-full max-w-md mb-3">
-          <p className="font-display text-sm text-fg/70 mb-2">
-            {t('weakTopics')}
-          </p>
-          <div className="flex gap-2 flex-wrap">
-            {weak.map((id) => (
+            <div style={{ flex: 1 }}>
               <div
-                key={id}
-                className="flex items-center gap-2 px-3 py-1 rounded-round bg-warning/20 text-warning font-display text-sm"
+                style={{
+                  fontWeight: 700,
+                  fontSize: 15,
+                  color: '#0F172A',
+                }}
               >
-                <span>#{id}</span>
-                <StarRow stars={progress[id]?.bestStars ?? 0} size="sm" />
+                {profile.nickname}
               </div>
-            ))}
+              <div style={{ fontSize: 12, color: '#64748B' }}>
+                {profile.difficulty === 'easy'
+                  ? 'Kolay'
+                  : profile.difficulty === 'medium'
+                    ? 'Orta'
+                    : 'Zor'}
+                {' · '}
+                {profile.themeKey === 'space'
+                  ? 'Uzay'
+                  : profile.themeKey === 'jungle'
+                    ? 'Orman'
+                    : profile.themeKey === 'ocean'
+                      ? 'Okyanus'
+                      : 'Şekerler'}{' '}
+                teması
+              </div>
+            </div>
           </div>
-        </Card>
-      )}
-
-      <div className="w-full max-w-md grid grid-cols-2 gap-3">
-        <Button
-          variant="primary"
-          onClick={() => void navigate('/parent/reports/daily')}
-        >
-          {t('reports')}
-        </Button>
-        <Button
-          variant="primary"
-          onClick={() => void navigate('/parent/settings')}
-        >
-          {t('settings')}
-        </Button>
-        <Button
-          variant="ghost"
-          onClick={() => void navigate('/parent/profiles')}
-        >
-          {t('manageProfiles')}
-        </Button>
-        <Button
-          variant="ghost"
-          onClick={() => void navigate('/parent/email-preview')}
-        >
-          {t('sendReport')}
-        </Button>
+        )}
       </div>
-    </main>
+
+      {/* Stats */}
+      <div style={{ padding: '16px 18px' }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 8,
+            marginBottom: 16,
+          }}
+        >
+          <StatBox value={`${formatTime(totalTimeMs)}`} label="Toplam süre" />
+          <StatBox
+            value={`${completedLevels}/${levels.length}`}
+            label="Tamamlanan seviye"
+          />
+          <StatBox value={totalStars} label="Yıldız" />
+        </div>
+
+        {/* Sections */}
+        <div
+          style={{
+            fontSize: 13,
+            fontWeight: 700,
+            color: '#475569',
+            textTransform: 'uppercase',
+            letterSpacing: '0.04em',
+            marginBottom: 6,
+          }}
+        >
+          Hesap
+        </div>
+        <div
+          style={{
+            background: '#fff',
+            borderRadius: 14,
+            border: '1px solid #E2E8F0',
+            overflow: 'hidden',
+            marginBottom: 16,
+          }}
+        >
+          <Row
+            icon="📊"
+            label={t('reports')}
+            onClick={() => void navigate('/parent/reports/daily')}
+          />
+          <Row
+            icon="⚙️"
+            label={t('settings')}
+            onClick={() => void navigate('/parent/settings')}
+          />
+          <Row
+            icon="👨‍👩‍👧"
+            label={t('manageProfiles')}
+            onClick={() => void navigate('/parent/profiles')}
+          />
+          <Row
+            icon="📧"
+            label={t('sendReport')}
+            onClick={() => void navigate('/parent/email-preview')}
+          />
+        </div>
+
+        <div
+          style={{
+            background: '#fff',
+            borderRadius: 12,
+            border: '1px solid #FCA5A5',
+            padding: '12px 14px',
+            color: '#DC2626',
+            fontSize: 13,
+            fontWeight: 600,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <span>Altın: {coins}</span>
+          <button
+            type="button"
+            onClick={() => {
+              revoke();
+              void exitToHome(navigate);
+            }}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: '#DC2626',
+              cursor: 'pointer',
+              fontWeight: 700,
+              fontSize: 13,
+            }}
+          >
+            {t('exitParentArea')} →
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }

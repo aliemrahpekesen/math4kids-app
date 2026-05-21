@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Button, Card, TouchTarget } from '../ui';
 import {
   hashPin,
   verifyPin,
@@ -219,25 +218,63 @@ export function ParentGateScreen() {
 
   const displayPin = step === 'enter' ? pin : confirmPin;
 
-  // Loading skeleton (auth peek pending).
+  const wrapStyle: React.CSSProperties = {
+    minHeight: '100dvh',
+    background: 'linear-gradient(180deg, #0F172A 0%, #1E293B 100%)',
+    padding: '70px 26px 28px',
+    display: 'flex',
+    flexDirection: 'column',
+  };
+
+  // Loading skeleton.
   if (mode === 'loading') {
     return (
-      <main className="app-shell">
-        <p className="text-fg/60">…</p>
-      </main>
+      <div style={wrapStyle}>
+        <p style={{ color: '#94A3B8' }}>…</p>
+      </div>
     );
   }
 
   // Forgot-PIN math-challenge UI.
   if (mode === 'forgot') {
     return (
-      <main className="app-shell">
-        <Card className="max-w-sm w-full text-center">
-          <h1 className="font-display text-2xl text-primary-fg mb-2">
+      <div style={wrapStyle}>
+        <div
+          style={{
+            background: '#1E293B',
+            border: '1px solid rgba(255,255,255,0.06)',
+            borderRadius: 24,
+            padding: 22,
+            maxWidth: 340,
+            width: '100%',
+            margin: '0 auto',
+            color: '#F8FAFC',
+          }}
+        >
+          <h1
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 22,
+              fontWeight: 700,
+              margin: '0 0 8px',
+            }}
+          >
             {t('forgotPinTitle')}
           </h1>
-          <p className="text-fg/80 mb-4">{t('forgotPinInstructions')}</p>
-          <p className="font-display text-3xl text-accent mb-4 tabular-nums">
+          <p style={{ color: '#94A3B8', fontSize: 14, margin: '0 0 14px' }}>
+            {t('forgotPinInstructions')}
+          </p>
+          <p
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 30,
+              fontWeight: 800,
+              textAlign: 'center',
+              color: '#38BDF8',
+              fontVariantNumeric: 'tabular-nums',
+              margin: '0 0 16px',
+            }}
+          >
             {challenge ? `${challenge.prompt} = ?` : '…'}
           </p>
           <input
@@ -246,123 +283,304 @@ export function ParentGateScreen() {
             value={forgotInput}
             onChange={(e) => setForgotInput(e.target.value)}
             placeholder="?"
-            className="w-full px-4 py-3 mb-3 rounded-soft bg-bg/40 text-fg border-2 border-fg/30 focus:border-accent focus:outline-none text-center text-2xl tabular-nums"
             aria-label={t('forgotPinAnswer')}
+            style={{
+              width: '100%',
+              padding: '14px 16px',
+              borderRadius: 14,
+              background: 'rgba(255,255,255,0.06)',
+              color: '#F8FAFC',
+              border: '2px solid rgba(255,255,255,0.12)',
+              fontSize: 22,
+              textAlign: 'center',
+              fontVariantNumeric: 'tabular-nums',
+              marginBottom: 12,
+            }}
           />
           {error && (
-            <p className="text-danger mb-3" role="alert">
+            <p
+              style={{ color: '#F87171', fontSize: 13, marginBottom: 8 }}
+              role="alert"
+            >
               {error}
             </p>
           )}
-          <div className="grid grid-cols-2 gap-2">
-            <Button
-              variant="ghost"
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+            <button
+              type="button"
               onClick={() => {
                 setError(null);
                 setForgotInput('');
                 setMode('verify');
               }}
+              style={{
+                background: 'rgba(255,255,255,0.06)',
+                color: '#F8FAFC',
+                border: 'none',
+                borderRadius: 14,
+                padding: '12px',
+                fontWeight: 700,
+                cursor: 'pointer',
+              }}
             >
               {tc('back')}
-            </Button>
-            <Button
-              variant="primary"
+            </button>
+            <button
+              type="button"
               onClick={submitForgotChallenge}
               disabled={!forgotInput.trim()}
+              style={{
+                background: '#0EA5E9',
+                color: '#fff',
+                border: 'none',
+                borderRadius: 14,
+                padding: '12px',
+                fontWeight: 800,
+                cursor: forgotInput.trim() ? 'pointer' : 'not-allowed',
+                opacity: forgotInput.trim() ? 1 : 0.5,
+              }}
             >
               {tc('confirm')}
-            </Button>
+            </button>
           </div>
-        </Card>
-      </main>
+        </div>
+      </div>
     );
   }
 
+  // Main keypad mode.
   return (
-    <main className="app-shell">
-      <Card className="max-w-sm w-full text-center">
-        <h1 className="font-display text-2xl text-primary-fg mb-2">
-          {t('gate')}
-        </h1>
-        <p className="text-fg/80 mb-4">
-          {mode === 'set'
-            ? step === 'enter'
-              ? t('setPin')
-              : t('confirmPin')
-            : mode === 'cooldown'
-              ? t('cooldown', { seconds: cooldownSec })
-              : t('enterPin')}
+    <div style={wrapStyle}>
+      {/* Badge */}
+      <div
+        style={{
+          alignSelf: 'center',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 6,
+          background: 'rgba(255,255,255,0.08)',
+          color: '#94A3B8',
+          border: '1px solid rgba(255,255,255,0.08)',
+          padding: '6px 12px',
+          borderRadius: 999,
+          fontSize: 11,
+          fontWeight: 700,
+          letterSpacing: '0.08em',
+          textTransform: 'uppercase',
+          marginBottom: 18,
+        }}
+      >
+        🔒 Ebeveyn Bölümü
+      </div>
+
+      <h1
+        style={{
+          fontFamily: 'var(--font-display)',
+          fontSize: 26,
+          fontWeight: 700,
+          color: '#F8FAFC',
+          textAlign: 'center',
+          letterSpacing: '-0.01em',
+          margin: '0 0 8px',
+        }}
+      >
+        {mode === 'set'
+          ? step === 'enter'
+            ? t('setPin')
+            : t('confirmPin')
+          : mode === 'cooldown'
+            ? t('cooldown', { seconds: cooldownSec })
+            : t('gate')}
+      </h1>
+      <p
+        style={{
+          fontSize: 14,
+          color: '#94A3B8',
+          textAlign: 'center',
+          lineHeight: 1.4,
+          margin: 0,
+        }}
+      >
+        Bu alan çocuklar için değildir.
+        <br />4 haneli ebeveyn PIN&apos;ini gir.
+      </p>
+
+      {/* PIN dots */}
+      <div
+        style={{
+          display: 'flex',
+          gap: 14,
+          marginTop: 30,
+          justifyContent: 'center',
+        }}
+      >
+        {[0, 1, 2, 3].map((i) => {
+          const filled = i < displayPin.length;
+          return (
+            <div
+              key={i}
+              style={{
+                width: 18,
+                height: 18,
+                borderRadius: 999,
+                background: filled ? '#38BDF8' : 'transparent',
+                border: `2px solid ${
+                  filled ? '#38BDF8' : 'rgba(255,255,255,0.25)'
+                }`,
+                transition: 'all 0.15s',
+              }}
+            />
+          );
+        })}
+      </div>
+
+      {error && (
+        <p
+          style={{
+            color: '#F87171',
+            textAlign: 'center',
+            marginTop: 14,
+            fontSize: 13,
+          }}
+          role="alert"
+        >
+          {error}
         </p>
+      )}
 
-        <div className="text-3xl font-display tracking-widest mb-4 h-10">
-          {'•'.repeat(displayPin.length)}
-          {' '.repeat(4 - displayPin.length)}
-        </div>
-
-        {error && (
-          <p className="text-danger mb-3" role="alert">
-            {error}
-          </p>
-        )}
-
-        <div className="grid grid-cols-3 gap-2 mb-4">
-          {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((d) => (
-            <TouchTarget
-              key={d}
-              onClick={() => tap(d)}
-              disabled={mode === 'cooldown'}
-              className="bg-surface text-fg text-2xl"
-            >
-              {d}
-            </TouchTarget>
-          ))}
-          <TouchTarget
-            onClick={clear}
+      {/* Keypad */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: 10,
+          marginTop: 26,
+        }}
+      >
+        {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((d) => (
+          <button
+            key={d}
+            type="button"
+            onClick={() => tap(d)}
             disabled={mode === 'cooldown'}
-            className="bg-surface text-fg"
-            aria-label="clear"
+            style={{
+              height: 64,
+              borderRadius: 16,
+              background: 'rgba(255,255,255,0.06)',
+              color: '#F8FAFC',
+              border: 'none',
+              fontFamily: 'var(--font-display)',
+              fontSize: 26,
+              fontWeight: 600,
+              cursor: mode === 'cooldown' ? 'not-allowed' : 'pointer',
+              boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)',
+            }}
           >
-            ⌫
-          </TouchTarget>
-          <TouchTarget
-            onClick={() => tap('0')}
-            disabled={mode === 'cooldown'}
-            className="bg-surface text-fg text-2xl"
-          >
-            0
-          </TouchTarget>
-          <TouchTarget
-            onClick={submit}
-            disabled={mode === 'cooldown' || displayPin.length < 4}
-            className="bg-accent text-accent-fg"
-            aria-label={tc('confirm')}
-          >
-            ✓
-          </TouchTarget>
-        </div>
+            {d}
+          </button>
+        ))}
+        <button
+          type="button"
+          onClick={clear}
+          disabled={mode === 'cooldown'}
+          aria-label="clear"
+          style={{
+            height: 64,
+            borderRadius: 16,
+            background: 'rgba(255,255,255,0.06)',
+            color: '#94A3B8',
+            border: 'none',
+            fontSize: 22,
+            cursor: mode === 'cooldown' ? 'not-allowed' : 'pointer',
+          }}
+        >
+          ⌫
+        </button>
+        <button
+          type="button"
+          onClick={() => tap('0')}
+          disabled={mode === 'cooldown'}
+          style={{
+            height: 64,
+            borderRadius: 16,
+            background: 'rgba(255,255,255,0.06)',
+            color: '#F8FAFC',
+            border: 'none',
+            fontFamily: 'var(--font-display)',
+            fontSize: 26,
+            fontWeight: 600,
+            cursor: mode === 'cooldown' ? 'not-allowed' : 'pointer',
+          }}
+        >
+          0
+        </button>
+        <button
+          type="button"
+          onClick={submit}
+          disabled={mode === 'cooldown' || displayPin.length < 4}
+          aria-label={tc('confirm')}
+          style={{
+            height: 64,
+            borderRadius: 16,
+            background:
+              displayPin.length < 4
+                ? 'rgba(56,189,248,0.3)'
+                : '#0EA5E9',
+            color: '#fff',
+            border: 'none',
+            fontSize: 22,
+            cursor:
+              mode === 'cooldown' || displayPin.length < 4
+                ? 'not-allowed'
+                : 'pointer',
+          }}
+        >
+          ✓
+        </button>
+      </div>
 
+      <div style={{ flex: 1 }} />
+
+      <div style={{ textAlign: 'center', marginBottom: 8 }}>
         {mode === 'verify' && (
-          <Button
-            variant="ghost"
+          <button
+            type="button"
             onClick={() => {
               setError(null);
               setMode('forgot');
               setPin('');
             }}
-            className="w-full mb-2"
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: '#64748B',
+              fontSize: 13,
+              fontWeight: 500,
+              cursor: 'pointer',
+              padding: '8px 0',
+            }}
           >
             {t('forgotPinLink')}
-          </Button>
+          </button>
         )}
-
-        <Button
-          variant="ghost"
+        <button
+          type="button"
           onClick={() => void navigate('/map')}
-          className="w-full"
+          style={{
+            background: 'transparent',
+            border: 'none',
+            color: '#94A3B8',
+            fontSize: 13,
+            fontWeight: 600,
+            cursor: 'pointer',
+            padding: '8px 0',
+            display: 'block',
+            margin: '0 auto',
+          }}
         >
           {tc('back')}
-        </Button>
-      </Card>
-    </main>
+        </button>
+      </div>
+    </div>
   );
 }

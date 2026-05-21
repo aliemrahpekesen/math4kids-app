@@ -63,18 +63,19 @@ test.describe('Math4KidsApp — Acceptance Criteria (AC-01..AC-18)', () => {
   }) => {
     await page.goto('/onboarding/language');
     await page.getByRole('button', { name: 'Türkçe' }).click();
+    await page.getByRole('button', { name: /Devam et/i }).click();
     await page.getByPlaceholder(/adın ne olsun/i).fill('Test');
-    await page.getByRole('button', { name: /İleri/i }).click();
+    await page.getByRole('button', { name: /Devam et/i }).click();
     // Avatar screen: pick the first one (fox)
     await page.locator('button[aria-label="jungle-fox"]').click();
-    await page.getByRole('button', { name: /İleri/i }).click();
+    await page.getByRole('button', { name: /Devam et/i }).click();
     // Theme: Space already selected
-    await page.getByRole('button', { name: /İleri/i }).click();
+    await page.getByRole('button', { name: /Devam et/i }).click();
     // Skip email
     await page.getByRole('button', { name: /atla/i }).click();
     // Should land on map (TrackPicker first).
     await page.waitForURL('**/map');
-    const numbersBtn = page.getByRole('button', { name: /🔢 Sayılar/ });
+    const numbersBtn = page.getByRole('button', { name: 'Sayılar' });
     await expect(numbersBtn).toBeVisible();
     // Enter the Numbers track to reach the per-tier level grid.
     await numbersBtn.click();
@@ -102,11 +103,12 @@ test.describe('Math4KidsApp — Acceptance Criteria (AC-01..AC-18)', () => {
     // Boot the app with a seeded profile first via onboarding.
     await page.goto('/onboarding/language');
     await page.getByRole('button', { name: 'Türkçe' }).click();
+    await page.getByRole('button', { name: /Devam et/i }).click();
     await page.getByPlaceholder(/adın ne olsun/i).fill('A11y');
-    await page.getByRole('button', { name: /İleri/i }).click();
+    await page.getByRole('button', { name: /Devam et/i }).click();
     await page.locator('button[aria-label="jungle-fox"]').click();
-    await page.getByRole('button', { name: /İleri/i }).click();
-    await page.getByRole('button', { name: /İleri/i }).click();
+    await page.getByRole('button', { name: /Devam et/i }).click();
+    await page.getByRole('button', { name: /Devam et/i }).click();
     await page.getByRole('button', { name: /atla/i }).click();
     await page.waitForURL('**/map');
     const results = await new AxeBuilder({ page })

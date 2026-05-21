@@ -9,25 +9,35 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg: 'var(--color-bg)',
-        surface: 'var(--color-surface)',
-        primary: {
-          DEFAULT: 'var(--color-primary)',
-          fg: 'var(--color-primary-fg)',
-        },
         accent: {
           DEFAULT: 'var(--color-accent)',
+          dark: 'var(--color-accent-dark)',
+          soft: 'var(--color-accent-soft)',
           fg: 'var(--color-accent-fg)',
         },
+        deep: 'var(--color-deep)',
+        light: 'var(--color-light)',
+        card: {
+          bg: 'var(--color-card-bg)',
+          tint: 'var(--color-card-tint)',
+        },
+        secondary: 'var(--color-secondary)',
         success: 'var(--color-success)',
-        warning: 'var(--color-warning)',
-        danger: 'var(--color-danger)',
         fg: 'var(--color-fg)',
         muted: 'var(--color-muted)',
         star: {
           filled: 'var(--color-star-filled)',
           empty: 'var(--color-star-empty)',
         },
+        /* Legacy compat — keep old screens compiling while we migrate. */
+        bg: 'var(--color-bg)',
+        surface: 'var(--color-surface)',
+        primary: {
+          DEFAULT: 'var(--color-primary)',
+          fg: 'var(--color-primary-fg)',
+        },
+        warning: 'var(--color-warning)',
+        danger: 'var(--color-danger)',
       },
       borderRadius: {
         soft: 'var(--radius-soft)',
@@ -41,12 +51,10 @@ const config: Config = {
         display: 'var(--font-display)',
         body: 'var(--font-body)',
       },
-      minHeight: {
-        touch: '56px',
-      },
-      minWidth: {
-        touch: '56px',
-      },
+      minHeight: { touch: '64px' },
+      minWidth: { touch: '64px' },
+      width: { touch: '64px' },
+      height: { touch: '64px' },
     },
   },
   plugins: [],

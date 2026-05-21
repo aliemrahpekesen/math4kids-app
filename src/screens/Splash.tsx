@@ -1,9 +1,13 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProfileStore } from '../state/profileStore';
+import { useTheme } from '../themes/ThemeProvider';
+import { PageBg } from '../ui';
 
 export function Splash() {
   const navigate = useNavigate();
+  const { tokens } = useTheme();
+  const c = tokens.tokens.color;
   // Select primitive only — `.length` triggers no derived-array reference churn.
   const visibleProfileCount = useProfileStore(
     (s) => s.profiles.filter((p) => !p.deletedAt).length
@@ -21,12 +25,47 @@ export function Splash() {
   }, [navigate, visibleProfileCount]);
 
   return (
-    <main className="app-shell">
-      <div className="text-6xl mb-4 animate-bounce" aria-hidden="true">
-        🚀
+    <PageBg>
+      <div
+        style={{
+          minHeight: '100dvh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          style={{ fontSize: 64, marginBottom: 16 }}
+          aria-hidden="true"
+          className="animate-bounce"
+        >
+          🚀
+        </div>
+        <h1
+          style={{
+            fontFamily: tokens.tokens.font.display,
+            fontWeight: 900,
+            fontSize: 40,
+            color: c.accentDark,
+            letterSpacing: '-0.02em',
+            margin: 0,
+          }}
+        >
+          Math<span style={{ color: c.accent }}>4</span>Kids
+        </h1>
+        <p
+          style={{
+            fontFamily: tokens.tokens.font.body,
+            fontWeight: 600,
+            fontSize: 14,
+            color: '#64748B',
+            marginTop: 8,
+          }}
+        >
+          Hazırlanıyor…
+        </p>
       </div>
-      <h1 className="font-display text-4xl text-primary-fg">Math4Kids</h1>
-      <p className="text-fg/70 mt-2">Hazırlanıyor…</p>
-    </main>
+    </PageBg>
   );
 }

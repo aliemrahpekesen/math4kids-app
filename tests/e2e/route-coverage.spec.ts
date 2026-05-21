@@ -110,11 +110,12 @@ test.describe('route coverage — no crashes anywhere', () => {
     // Onboard so there's an active profile.
     await page.goto('/onboarding/language');
     await page.getByRole('button', { name: 'Türkçe' }).click();
+    await page.getByRole('button', { name: /Devam et/i }).click();
     await page.getByPlaceholder(/adın ne olsun/i).fill('Route');
-    await page.getByRole('button', { name: /İleri/i }).click();
+    await page.getByRole('button', { name: /Devam et/i }).click();
     await page.locator('button[aria-label="jungle-fox"]').click();
-    await page.getByRole('button', { name: /İleri/i }).click();
-    await page.getByRole('button', { name: /İleri/i }).click();
+    await page.getByRole('button', { name: /Devam et/i }).click();
+    await page.getByRole('button', { name: /Devam et/i }).click();
     await page.getByRole('button', { name: /atla/i }).click();
     await page.waitForURL('**/map');
 
