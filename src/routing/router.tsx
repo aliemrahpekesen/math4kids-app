@@ -1,6 +1,5 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { Splash } from '../screens/Splash';
-import { Placeholder } from '../screens/Placeholder';
 import { OnboardingLanguage } from '../screens/OnboardingLanguage';
 import {
   OnboardingProfile,
@@ -20,6 +19,8 @@ import { ParentReports } from '../screens/ParentReports';
 import { ParentSettings } from '../screens/ParentSettings';
 import { ParentProfiles } from '../screens/ParentProfiles';
 import { ParentEmailPreview } from '../screens/ParentEmailPreview';
+import { LeaderboardScreen } from '../screens/LeaderboardScreen';
+import { RewardsScreen } from '../screens/RewardsScreen';
 import { ParentGate } from './ParentGate';
 import { LessonSession } from './LessonSession';
 
@@ -47,8 +48,8 @@ export const router = createBrowserRouter([
     ],
   },
 
-  { path: '/rewards', element: <Placeholder title="Ödüller" /> },
-  { path: '/leaderboard', element: <Placeholder title="Sıralama" /> },
+  { path: '/rewards', element: <RewardsScreen /> },
+  { path: '/leaderboard', element: <LeaderboardScreen /> },
 
   { path: '/parent/gate', element: <ParentGateScreen /> },
   {

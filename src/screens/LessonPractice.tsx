@@ -4,11 +4,13 @@ import { useTranslation } from 'react-i18next';
 import { generate } from '../engines/exercise';
 import { ExerciseRunner } from './ExerciseRunner';
 import { Toast } from '../ui';
+import { useAudio } from '../audio/AudioProvider';
 
 export function LessonPractice() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { t } = useTranslation('lesson');
+  const audio = useAudio();
   const levelId = Number(id ?? 1);
   const [round, setRound] = useState(0);
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
@@ -17,6 +19,7 @@ export function LessonPractice() {
   const exercise = useMemo(() => generate(levelId, seed, 0), [levelId, seed]);
 
   const onAnswer = (correct: boolean) => {
+    audio.play(correct ? 'correct' : 'wrong');
     setFeedback(correct ? 'correct' : 'wrong');
     setTimeout(() => {
       setFeedback(null);

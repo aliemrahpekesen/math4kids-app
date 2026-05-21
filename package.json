@@ -26,8 +26,10 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@types/howler": "^2.2.13",
     "clsx": "^2.1.1",
     "framer-motion": "^12.39.0",
+    "howler": "^2.2.4",
     "i18next": "^26.2.0",
     "idb-keyval": "^6.2.4",
     "react": "^18.3.1",
