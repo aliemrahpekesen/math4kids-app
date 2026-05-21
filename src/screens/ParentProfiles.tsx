@@ -18,7 +18,10 @@ export function ParentProfiles() {
   const navigate = useNavigate();
   const { t } = useTranslation('parent');
   const { t: tc } = useTranslation('common');
-  const profiles = useProfileStore((s) => listVisibleProfiles(s.profiles));
+  // Zustand: select raw array (reference-stable) and filter in render body.
+  // Filtering inside the selector returns a NEW array each call → infinite re-render.
+  const allProfiles = useProfileStore((s) => s.profiles);
+  const profiles = listVisibleProfiles(allProfiles);
   const [pendingAction, setPendingAction] = useState<
     { kind: 'reset'; id: ProfileId } | { kind: 'delete'; id: ProfileId } | null
   >(null);
