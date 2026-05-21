@@ -1,0 +1,294 @@
+{
+  "daily": [
+    {
+      "rank": 1,
+      "nickname": "Yıldız",
+      "avatarKey": "astronaut",
+      "stars": 51,
+      "cadence": "daily"
+    },
+    {
+      "rank": 2,
+      "nickname": "Aslan",
+      "avatarKey": "fox",
+      "stars": 47,
+      "cadence": "daily"
+    },
+    {
+      "rank": 3,
+      "nickname": "Sen",
+      "avatarKey": "panda",
+      "stars": 28,
+      "cadence": "daily",
+      "isSelf": true
+    },
+    {
+      "rank": 4,
+      "nickname": "Pırlanta",
+      "avatarKey": "owl",
+      "stars": 25,
+      "cadence": "daily"
+    },
+    {
+      "rank": 5,
+      "nickname": "Kuzu",
+      "avatarKey": "bunny",
+      "stars": 22,
+      "cadence": "daily"
+    },
+    {
+      "rank": 6,
+      "nickname": "Pamuk",
+      "avatarKey": "bunny",
+      "stars": 19,
+      "cadence": "daily"
+    },
+    {
+      "rank": 7,
+      "nickname": "Bilge",
+      "avatarKey": "owl",
+      "stars": 17,
+      "cadence": "daily"
+    },
+    {
+      "rank": 8,
+      "nickname": "Mavi",
+      "avatarKey": "fish",
+      "stars": 14,
+      "cadence": "daily"
+    },
+    {
+      "rank": 9,
+      "nickname": "Yıldırım",
+      "avatarKey": "astronaut",
+      "stars": 12,
+      "cadence": "daily"
+    },
+    {
+      "rank": 10,
+      "nickname": "Ayhan",
+      "avatarKey": "fox",
+      "stars": 9,
+      "cadence": "daily"
+    }
+  ],
+  "weekly": [
+    {
+      "rank": 1,
+      "nickname": "Yıldız",
+      "avatarKey": "astronaut",
+      "stars": 187,
+      "cadence": "weekly"
+    },
+    {
+      "rank": 2,
+      "nickname": "Aslan",
+      "avatarKey": "fox",
+      "stars": 165,
+      "cadence": "weekly"
+    },
+    {
+      "rank": 3,
+      "nickname": "Pırlanta",
+      "avatarKey": "owl",
+      "stars": 142,
+      "cadence": "weekly"
+    },
+    {
+      "rank": 4,
+      "nickname": "Sen",
+      "avatarKey": "panda",
+      "stars": 119,
+      "cadence": "weekly",
+      "isSelf": true
+    },
+    {
+      "rank": 5,
+      "nickname": "Kuzu",
+      "avatarKey": "bunny",
+      "stars": 95,
+      "cadence": "weekly"
+    },
+    {
+      "rank": 6,
+      "nickname": "Pamuk",
+      "avatarKey": "bunny",
+      "stars": 88,
+      "cadence": "weekly"
+    },
+    {
+      "rank": 7,
+      "nickname": "Mavi",
+      "avatarKey": "fish",
+      "stars": 71,
+      "cadence": "weekly"
+    },
+    {
+      "rank": 8,
+      "nickname": "Bilge",
+      "avatarKey": "owl",
+      "stars": 64,
+      "cadence": "weekly"
+    },
+    {
+      "rank": 9,
+      "nickname": "Yıldırım",
+      "avatarKey": "astronaut",
+      "stars": 52,
+      "cadence": "weekly"
+    },
+    {
+      "rank": 10,
+      "nickname": "Ayhan",
+      "avatarKey": "fox",
+      "stars": 41,
+      "cadence": "weekly"
+    }
+  ],
+  "monthly": [
+    {
+      "rank": 1,
+      "nickname": "Aslan",
+      "avatarKey": "fox",
+      "stars": 612,
+      "cadence": "monthly"
+    },
+    {
+      "rank": 2,
+      "nickname": "Yıldız",
+      "avatarKey": "astronaut",
+      "stars": 595,
+      "cadence": "monthly"
+    },
+    {
+      "rank": 3,
+      "nickname": "Pırlanta",
+      "avatarKey": "owl",
+      "stars": 510,
+      "cadence": "monthly"
+    },
+    {
+      "rank": 4,
+      "nickname": "Kuzu",
+      "avatarKey": "bunny",
+      "stars": 432,
+      "cadence": "monthly"
+    },
+    {
+      "rank": 5,
+      "nickname": "Sen",
+      "avatarKey": "panda",
+      "stars": 388,
+      "cadence": "monthly",
+      "isSelf": true
+    },
+    {
+      "rank": 6,
+      "nickname": "Mavi",
+      "avatarKey": "fish",
+      "stars": 305,
+      "cadence": "monthly"
+    },
+    {
+      "rank": 7,
+      "nickname": "Bilge",
+      "avatarKey": "owl",
+      "stars": 274,
+      "cadence": "monthly"
+    },
+    {
+      "rank": 8,
+      "nickname": "Pamuk",
+      "avatarKey": "bunny",
+      "stars": 251,
+      "cadence": "monthly"
+    },
+    {
+      "rank": 9,
+      "nickname": "Yıldırım",
+      "avatarKey": "astronaut",
+      "stars": 198,
+      "cadence": "monthly"
+    },
+    {
+      "rank": 10,
+      "nickname": "Ayhan",
+      "avatarKey": "fox",
+      "stars": 152,
+      "cadence": "monthly"
+    }
+  ],
+  "yearly": [
+    {
+      "rank": 1,
+      "nickname": "Yıldız",
+      "avatarKey": "astronaut",
+      "stars": 5810,
+      "cadence": "yearly"
+    },
+    {
+      "rank": 2,
+      "nickname": "Aslan",
+      "avatarKey": "fox",
+      "stars": 5402,
+      "cadence": "yearly"
+    },
+    {
+      "rank": 3,
+      "nickname": "Pırlanta",
+      "avatarKey": "owl",
+      "stars": 4910,
+      "cadence": "yearly"
+    },
+    {
+      "rank": 4,
+      "nickname": "Kuzu",
+      "avatarKey": "bunny",
+      "stars": 4332,
+      "cadence": "yearly"
+    },
+    {
+      "rank": 5,
+      "nickname": "Mavi",
+      "avatarKey": "fish",
+      "stars": 3805,
+      "cadence": "yearly"
+    },
+    {
+      "rank": 6,
+      "nickname": "Bilge",
+      "avatarKey": "owl",
+      "stars": 3674,
+      "cadence": "yearly"
+    },
+    {
+      "rank": 7,
+      "nickname": "Sen",
+      "avatarKey": "panda",
+      "stars": 3210,
+      "cadence": "yearly",
+      "isSelf": true
+    },
+    {
+      "rank": 8,
+      "nickname": "Pamuk",
+      "avatarKey": "bunny",
+      "stars": 2951,
+      "cadence": "yearly"
+    },
+    {
+      "rank": 9,
+      "nickname": "Yıldırım",
+      "avatarKey": "astronaut",
+      "stars": 2198,
+      "cadence": "yearly"
+    },
+    {
+      "rank": 10,
+      "nickname": "Ayhan",
+      "avatarKey": "fox",
+      "stars": 1452,
+      "cadence": "yearly"
+    }
+  ]
+}
