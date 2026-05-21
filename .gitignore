@@ -53,3 +53,7 @@ htmlcov/
 *.p12
 *.pfx
 .secrets/
+
+# Playwright runtime artifacts
+test-results/
+playwright-report/
