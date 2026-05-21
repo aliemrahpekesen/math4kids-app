@@ -67,4 +67,4 @@ MIT — see [LICENSE](LICENSE).
 
 ---
 
-*Personal / learning project.*
+_Personal / learning project._
