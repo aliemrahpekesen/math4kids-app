@@ -1,8 +1,18 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
+import { resolve } from 'node:path';
 
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    alias: {
+      // Stub the vite-plugin-pwa virtual module so tests don't need the plugin.
+      'virtual:pwa-register': resolve(
+        __dirname,
+        'tests/stubs/virtual-pwa-register.ts'
+      ),
+    },
+  },
   test: {
     environment: 'jsdom',
     globals: true,
