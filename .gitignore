@@ -8,6 +8,9 @@ docs/
 .mcp.json
 CLAUDE.md
 
+# Design reference artifacts (the design-canvas .jsx handoff; not app code)
+design_files/
+
 # All markdown at root EXCEPT README.md + CHANGELOG.md (LICENSE is .txt-shaped)
 /*.md
 !README.md

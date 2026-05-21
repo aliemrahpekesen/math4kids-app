@@ -1,38 +1,134 @@
+@import '@fontsource/baloo-2/latin-400.css';
+@import '@fontsource/baloo-2/latin-700.css';
+@import '@fontsource/baloo-2/latin-800.css';
+@import '@fontsource/baloo-2/latin-ext-400.css';
+@import '@fontsource/baloo-2/latin-ext-700.css';
+@import '@fontsource/baloo-2/latin-ext-800.css';
+@import '@fontsource/nunito/latin-400.css';
+@import '@fontsource/nunito/latin-600.css';
+@import '@fontsource/nunito/latin-700.css';
+@import '@fontsource/nunito/latin-800.css';
+@import '@fontsource/nunito/latin-ext-400.css';
+@import '@fontsource/nunito/latin-ext-600.css';
+@import '@fontsource/nunito/latin-ext-700.css';
+@import '@fontsource/nunito/latin-ext-800.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Token defaults — overridden at runtime by ThemeProvider from
- * content/themes/<key>/tokens.json. The static values here are the Space
- * palette so cold boot before React mounts already looks right. */
+/* Token defaults — overridden at runtime by ThemeProvider. The static values
+ * here are the Space palette so cold boot before React mounts looks right. */
 
 :root {
-  --color-bg: #0b1437;
-  --color-surface: #1a2356;
-  --color-primary: #7c3aed;
-  --color-primary-fg: #ffffff;
-  --color-accent: #facc15;
-  --color-accent-fg: #1a2356;
-  --color-success: #34d399;
-  --color-warning: #fbbf24;
-  --color-danger: #f87171;
-  --color-fg: #e0e7ff;
+  --color-accent: #7c3aed;
+  --color-accent-dark: #5b21b6;
+  --color-accent-soft: #ede9fe;
+  --color-deep: #1e1b4b;
+  --color-light: #f5f3ff;
+  --color-card-bg: #ffffff;
+  --color-card-tint: #faf5ff;
+  --color-secondary: #f59e0b;
+  --color-success: #22c55e;
+  --color-fg: #1f2937;
   --color-muted: #94a3b8;
-  --color-star-filled: #fde047;
-  --color-star-empty: #475569;
-  --radius-soft: 1.25rem;
+  --color-star-filled: #facc15;
+  --color-star-empty: #e5e7eb;
+  --radius-soft: 20px;
   --radius-round: 9999px;
-  --shadow-card: 0 10px 30px -10px rgba(124, 58, 237, 0.45);
-  --shadow-glow: 0 0 24px rgba(250, 204, 21, 0.55);
-  --font-display: 'Fredoka', 'Baloo 2', system-ui, sans-serif;
-  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --motion-celebration-ms: 400;
-  --motion-transition-ms: 200;
+  --shadow-card: 0 4px 0 rgba(0, 0, 0, 0.04), 0 10px 24px rgba(0, 0, 0, 0.06);
+  --shadow-glow: 0 6px 14px rgba(124, 58, 237, 0.25);
+  --font-display: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+  --font-body: 'Nunito', system-ui, -apple-system, sans-serif;
+  --motion-celebration-ms: 900;
+  --motion-transition-ms: 180;
 
-  color-scheme: dark;
+  /* Legacy compat — old Tailwind utilities reference these. Maps to new tokens. */
+  --color-bg: #f0eee9;
+  --color-surface: var(--color-card-tint);
+  --color-primary: var(--color-accent);
+  --color-primary-fg: #ffffff;
+  --color-accent-fg: #ffffff;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+
+  color-scheme: light;
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@keyframes m4k-bounce {
+  0% {
+    transform: translateY(-20px) scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(0) scale(1.1);
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(-4px) scale(0.96);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+@keyframes m4k-bounce-loop {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.02);
+  }
+}
+@keyframes m4k-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+@keyframes m4k-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  80% {
+    transform: scale(1.25);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.25);
+    opacity: 0;
+  }
+}
+@keyframes m4k-blink {
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes m4k-confetti {
+  0% {
+    transform: translateY(-10px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(220px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Reduced motion — disables all m4k-* animations app-wide */
+body.m4k-rm *,
+body.m4k-rm *::before,
+body.m4k-rm *::after {
+  animation: none !important;
+  transition: none !important;
 }
 
 @layer base {
@@ -54,7 +150,7 @@
 
   body {
     min-height: 100dvh;
-    background: var(--color-bg);
+    background: #f0eee9;
     color: var(--color-fg);
   }
 
@@ -71,9 +167,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
+    padding: 1rem;
     text-align: center;
-    font-family: var(--font-display);
+    font-family: var(--font-body);
   }
 }

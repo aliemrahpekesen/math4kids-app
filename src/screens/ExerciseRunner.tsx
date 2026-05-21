@@ -1,16 +1,23 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, NumeralTile, TouchTarget } from '../ui';
+import { useTheme } from '../themes/ThemeProvider';
+import {
+  ObjectGlyph,
+  HundredBlock,
+  TenBlock,
+  OneBlock,
+} from '../ui';
+import { IconSound } from '../ui/icons';
 import { useAudio } from '../audio/AudioProvider';
 import { useSettingsStore } from '../state/settingsStore';
 import type { Exercise } from '../engines/types';
 
-/** Map shape-key text options to glyphs so the child sees a picture, not a word. */
-const SHAPE_GLYPH: Record<string, string> = {
-  circle: '🔵',
-  square: '🟦',
-  triangle: '🔺',
-  rectangle: '▬',
+type ObjectKind = 'rocket' | 'banana' | 'fish' | 'candy';
+const THEME_OBJECT: Record<string, ObjectKind> = {
+  rocket: 'rocket',
+  banana: 'banana',
+  fish: 'fish',
+  candy: 'candy',
 };
 
 interface ExerciseRunnerProps {
@@ -19,20 +26,242 @@ interface ExerciseRunnerProps {
   hintsUsed?: number;
 }
 
-/** Render a generic exercise. Handles all 13 exercise types via switch. */
+const SHAPE_GLYPH: Record<string, string> = {
+  circle: '🔵',
+  square: '🟦',
+  triangle: '🔺',
+  rectangle: '▬',
+};
+
+interface AnswerTileProps {
+  value: string;
+  state: 'idle' | 'correct' | 'wrong';
+  big?: boolean;
+  onSelect: () => void;
+}
+
+function AnswerTile({ value, state, big = false, onSelect }: AnswerTileProps) {
+  const { tokens } = useTheme();
+  const palettes = {
+    idle: { bg: '#fff', fg: '#0F172A', border: 'transparent', shadow: '#E5E7EB' },
+    correct: { bg: '#DCFCE7', fg: '#15803D', border: '#22C55E', shadow: '#16A34A' },
+    wrong: { bg: '#FEE2E2', fg: '#991B1B', border: '#F87171', shadow: '#DC2626' },
+  };
+  const p = palettes[state];
+  const glyph = SHAPE_GLYPH[value];
+  const display = glyph ?? value;
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      aria-label={value}
+      style={{
+        appearance: 'none',
+        cursor: 'pointer',
+        background: p.bg,
+        color: p.fg,
+        border: `3px solid ${p.border}`,
+        borderRadius: 22,
+        padding: big ? '22px 14px' : '16px 10px',
+        fontFamily: tokens.tokens.font.display,
+        fontWeight: 900,
+        fontSize: big ? 38 : 30,
+        fontVariantNumeric: 'tabular-nums',
+        boxShadow: `inset 0 -6px 0 ${p.shadow}, 0 4px 0 rgba(0,0,0,0.04), 0 8px 18px rgba(0,0,0,0.06)`,
+        transition: 'transform .08s',
+        minHeight: big ? 88 : 64,
+      }}
+    >
+      {display}
+    </button>
+  );
+}
+
+interface ExerciseFrameProps {
+  prompt: string;
+  onSpeak: () => void;
+  children: React.ReactNode;
+  options: string[];
+  onAnswer: (picked: string) => void;
+  tilesLayout?: 'grid-2x2' | 'row-4';
+  bigTiles?: boolean;
+  hintsUsed?: number;
+}
+
+function ExerciseFrame({
+  prompt,
+  onSpeak,
+  children,
+  options,
+  onAnswer,
+  tilesLayout = 'grid-2x2',
+  bigTiles = false,
+  hintsUsed = 0,
+}: ExerciseFrameProps) {
+  const { tokens } = useTheme();
+  const c = tokens.tokens.color;
+  return (
+    <div
+      style={{
+        padding: '64px 16px 22px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 14,
+        minHeight: '100dvh',
+      }}
+    >
+      {/* Prompt bar */}
+      <button
+        type="button"
+        onClick={onSpeak}
+        aria-label={prompt}
+        style={{
+          appearance: 'none',
+          border: 'none',
+          background: '#fff',
+          borderRadius: 22,
+          padding: '12px 16px 12px 10px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          textAlign: 'left',
+          width: '100%',
+          cursor: 'pointer',
+          boxShadow:
+            'inset 0 -4px 0 rgba(0,0,0,0.04), 0 4px 10px rgba(0,0,0,0.06)',
+        }}
+      >
+        <IconSound size={48} color={c.accent} stroke={c.accentDark} />
+        <span
+          style={{
+            fontFamily: tokens.tokens.font.display,
+            fontWeight: 800,
+            fontSize: 20,
+            color: '#0F172A',
+          }}
+        >
+          {prompt}
+        </span>
+      </button>
+
+      {/* Hero visual */}
+      <div
+        style={{
+          background: '#fff',
+          borderRadius: 22,
+          padding: 16,
+          minHeight: 160,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 4px 0 rgba(0,0,0,0.04), 0 10px 24px rgba(0,0,0,0.06)',
+        }}
+      >
+        {children}
+      </div>
+
+      {/* Hints indicator */}
+      {hintsUsed > 0 && (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: 4,
+            fontSize: 24,
+          }}
+          aria-label={`hints: ${hintsUsed}`}
+        >
+          {'💡'.repeat(Math.min(hintsUsed, 5))}
+        </div>
+      )}
+
+      <div style={{ flex: 1 }} />
+
+      {/* Answer tiles */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns:
+            tilesLayout === 'grid-2x2' ? '1fr 1fr' : 'repeat(4, 1fr)',
+          gap: 12,
+        }}
+      >
+        {options.map((opt) => (
+          <AnswerTile
+            key={opt}
+            value={opt}
+            state="idle"
+            big={bigTiles}
+            onSelect={() => onAnswer(opt)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+interface TenFrameProps {
+  n: number;
+}
+
+function TenFrame({ n }: TenFrameProps) {
+  const { tokens } = useTheme();
+  const c = tokens.tokens.color;
+  return (
+    <div
+      style={{
+        background: '#0F172A',
+        padding: 4,
+        borderRadius: 12,
+        display: 'grid',
+        gridTemplateColumns: 'repeat(5, 1fr)',
+        gap: 4,
+        maxWidth: 240,
+        margin: '0 auto',
+      }}
+    >
+      {Array.from({ length: 10 }, (_, i) => (
+        <div
+          key={i}
+          style={{
+            aspectRatio: '1 / 1',
+            background: '#fff',
+            borderRadius: 5,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          {i < n && (
+            <div
+              style={{
+                width: '75%',
+                height: '75%',
+                borderRadius: '50%',
+                background: c.accent,
+                boxShadow: `0 -3px 0 ${c.accentDark} inset`,
+              }}
+            />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function ExerciseRunner({
   exercise,
   onAnswer,
   hintsUsed = 0,
 }: ExerciseRunnerProps) {
   const { t } = useTranslation('lesson');
+  const { tokens } = useTheme();
   const audio = useAudio();
   const language = useSettingsStore((s) => s.language);
 
   const promptVars: Record<string, unknown> = exercise.meta ?? {};
   const promptText = t(exercise.prompt, promptVars);
 
-  // Narrate the prompt on entry — this is the child's only "reading" channel.
   useEffect(() => {
     audio.speak(promptText, language);
     return () => {
@@ -45,254 +274,420 @@ export function ExerciseRunner({
     onAnswer(correct, picked);
   };
 
-  return (
-    <main className="app-shell">
-      <Card className="max-w-md w-full text-center">
-        <button
-          type="button"
-          onClick={() => audio.speak(promptText, language)}
-          aria-label={promptText}
-          className="block mx-auto mb-2 w-touch h-touch rounded-full bg-surface/60 text-2xl"
-        >
-          🔊
-        </button>
-        <ExerciseVisual exercise={exercise} />
-        <div className="grid grid-cols-2 gap-3 mt-6">
-          {exercise.options.map((opt) => {
-            const asNumber = Number(opt);
-            if (Number.isFinite(asNumber) && /^\d+$/.test(opt)) {
-              return (
-                <NumeralTile
-                  key={opt}
-                  value={asNumber}
-                  onSelect={() => checkAndFire(opt)}
-                />
-              );
-            }
-            const glyph = SHAPE_GLYPH[opt];
-            return (
-              <TouchTarget
-                key={opt}
-                onClick={() => checkAndFire(opt)}
-                aria-label={opt}
-                className="bg-surface text-fg hover:bg-primary hover:text-primary-fg rounded-soft text-4xl"
-              >
-                {glyph ?? opt}
-              </TouchTarget>
-            );
-          })}
-        </div>
-        {hintsUsed > 0 && (
-          <div
-            className="mt-4 text-2xl"
-            aria-label={`${t('hint')} × ${hintsUsed}`}
-          >
-            {'💡'.repeat(Math.min(hintsUsed, 5))}
-          </div>
-        )}
-      </Card>
-    </main>
-  );
-}
-
-/**
- * Visual payload renderer. Each exercise.meta drives a different visual.
- * Kept inline to avoid file proliferation; can be split per-type later.
- */
-function ExerciseVisual({ exercise }: { exercise: Exercise }) {
+  const kind: ObjectKind =
+    THEME_OBJECT[tokens.illustration.object] ?? 'rocket';
   const meta: Record<string, unknown> = exercise.meta ?? {};
+
+  // Choose visual + tile layout per exercise type.
+  let visual: React.ReactNode = null;
+  let layout: 'grid-2x2' | 'row-4' = 'row-4';
+  let big = false;
+
   switch (exercise.type) {
     case 'count-objects': {
       const count = (meta.count as number) ?? 0;
-      const glyph = (meta.glyph as string) ?? '⭐';
-      return (
-        <div className="flex flex-wrap justify-center gap-2 text-4xl py-4">
+      visual = (
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(5, 1fr)',
+            gap: 10,
+            justifyItems: 'center',
+            maxWidth: 280,
+            margin: '0 auto',
+          }}
+        >
           {Array.from({ length: count }, (_, i) => (
-            <span key={i} aria-hidden="true">
-              {glyph}
-            </span>
+            <ObjectGlyph key={i} kind={kind} size={52} />
           ))}
         </div>
       );
+      layout = 'grid-2x2';
+      big = true;
+      break;
     }
-    case 'add-visual': {
-      const a = (meta.a as number) ?? 0;
-      const b = (meta.b as number) ?? 0;
-      return (
-        <div className="flex items-center justify-center gap-3 text-3xl py-4 flex-wrap">
-          <span>{'🟣'.repeat(a)}</span>
-          <span className="font-display">+</span>
-          <span>{'🟢'.repeat(b)}</span>
-        </div>
-      );
-    }
-    case 'subtract-visual': {
-      const a = (meta.a as number) ?? 0;
-      const b = (meta.b as number) ?? 0;
-      return (
-        <div className="text-3xl py-4">
-          <span className="line-through opacity-50">{'🟠'.repeat(b)}</span>
-          <span>{'🟠'.repeat(a - b)}</span>
-        </div>
-      );
-    }
-    case 'groups-of': {
-      const groups = (meta.groups as number) ?? 0;
-      const each = (meta.each as number) ?? 0;
-      return (
-        <div className="flex flex-col items-center gap-2 py-4">
-          {Array.from({ length: groups }, (_, gi) => (
-            <div key={gi} className="flex gap-1">
-              {Array.from({ length: each }, (_, ei) => (
-                <span key={ei} aria-hidden="true" className="text-2xl">
-                  ⭐
-                </span>
+    case 'match-quantity':
+    case 'tap-number': {
+      const q = (meta.quantity as number) ?? (meta.n as number) ?? 0;
+      visual = (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 14,
+          }}
+        >
+          <TenFrame n={Math.min(q, 10)} />
+          {q <= 10 && (
+            <div
+              style={{
+                display: 'flex',
+                gap: 6,
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+              }}
+            >
+              {Array.from({ length: q }, (_, i) => (
+                <ObjectGlyph key={i} kind={kind} size={36} />
               ))}
+            </div>
+          )}
+        </div>
+      );
+      break;
+    }
+    case 'add-visual':
+    case 'add-numeric': {
+      const a =
+        (meta.a as number) ?? (meta.left as number) ?? 0;
+      const b = (meta.b as number) ?? (meta.right as number) ?? 0;
+      visual = (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            justifyContent: 'center',
+            flexWrap: 'wrap',
+          }}
+        >
+          <div
+            style={{
+              background: tokens.tokens.color.accentSoft,
+              borderRadius: 16,
+              padding: 10,
+              minWidth: 100,
+              minHeight: 100,
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 4,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            {Array.from({ length: a }, (_, i) => (
+              <ObjectGlyph key={i} kind={kind} size={30} />
+            ))}
+          </div>
+          <div
+            style={{
+              fontSize: 38,
+              color: tokens.tokens.color.accent,
+              fontWeight: 900,
+            }}
+            aria-hidden="true"
+          >
+            +
+          </div>
+          <div
+            style={{
+              background: '#FEF3C7',
+              borderRadius: 16,
+              padding: 10,
+              minWidth: 100,
+              minHeight: 100,
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 4,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            {Array.from({ length: b }, (_, i) => (
+              <ObjectGlyph key={i} kind={kind} size={30} />
+            ))}
+          </div>
+        </div>
+      );
+      break;
+    }
+    case 'subtract-visual':
+    case 'sub-numeric': {
+      const a = (meta.a as number) ?? 0;
+      const b = (meta.b as number) ?? 0;
+      visual = (
+        <div
+          style={{
+            display: 'flex',
+            gap: 6,
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+          }}
+        >
+          {Array.from({ length: a }, (_, i) => (
+            <div
+              key={i}
+              style={{
+                opacity: i < b ? 0.3 : 1,
+                textDecoration: i < b ? 'line-through' : 'none',
+              }}
+            >
+              <ObjectGlyph kind={kind} size={36} />
             </div>
           ))}
         </div>
       );
+      break;
+    }
+    case 'place-value-2digit':
+    case 'place-value-3digit': {
+      const n = (meta.n as number) ?? 0;
+      const h = Math.floor(n / 100);
+      const tens = Math.floor((n % 100) / 10);
+      const ones = n % 10;
+      visual = (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'center',
+            gap: 14,
+          }}
+        >
+          {h > 0 && (
+            <div style={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+              {Array.from({ length: h }, (_, i) => (
+                <HundredBlock key={i} size={70} />
+              ))}
+            </div>
+          )}
+          {tens > 0 && (
+            <div style={{ display: 'flex', gap: 3, alignItems: 'flex-end' }}>
+              {Array.from({ length: tens }, (_, i) => (
+                <TenBlock key={i} size={70} />
+              ))}
+            </div>
+          )}
+          {ones > 0 && (
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: 3,
+                maxWidth: 56,
+              }}
+            >
+              {Array.from({ length: ones }, (_, i) => (
+                <OneBlock key={i} size={14} />
+              ))}
+            </div>
+          )}
+        </div>
+      );
+      layout = 'grid-2x2';
+      break;
+    }
+    case 'compare':
+    case 'compare-2digit':
+    case 'compare-3digit': {
+      const a = (meta.a as number) ?? 0;
+      const b = (meta.b as number) ?? 0;
+      const compareCardStyle: React.CSSProperties = {
+        background: '#fff',
+        borderRadius: 22,
+        padding: '14px 10px',
+        border: `2px solid ${tokens.tokens.color.accent}`,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 6,
+        minWidth: 100,
+        boxShadow:
+          'inset 0 -4px 0 rgba(0,0,0,0.04), 0 4px 10px rgba(0,0,0,0.06)',
+      };
+      const compareValueStyle: React.CSSProperties = {
+        fontFamily: tokens.tokens.font.display,
+        fontWeight: 900,
+        fontSize: 60,
+        color: tokens.tokens.color.accentDark,
+        fontVariantNumeric: 'tabular-nums',
+      };
+      visual = (
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr auto 1fr',
+            alignItems: 'center',
+            gap: 8,
+          }}
+        >
+          <div style={compareCardStyle}>
+            <span style={compareValueStyle}>{a}</span>
+          </div>
+          <span
+            style={{
+              fontFamily: tokens.tokens.font.display,
+              fontSize: 32,
+              color: '#CBD5E1',
+              fontWeight: 900,
+            }}
+            aria-hidden="true"
+          >
+            VS
+          </span>
+          <div style={compareCardStyle}>
+            <span style={compareValueStyle}>{b}</span>
+          </div>
+        </div>
+      );
+      layout = 'row-4';
+      break;
     }
     case 'pattern-complete': {
-      const seq: string[] = (meta.sequence as string[] | undefined) ?? [];
-      return (
-        <div className="flex items-center justify-center gap-2 text-3xl py-4">
+      const seq: string[] =
+        (meta.sequence as string[] | undefined) ?? [];
+      visual = (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 8,
+            fontSize: 36,
+          }}
+        >
           {seq.map((tok, i) => (
             <span key={i} aria-hidden="true">
               {tok}
             </span>
           ))}
-          <span className="bg-accent/30 rounded-soft px-3 py-1 font-display">
+          <span
+            style={{
+              background: tokens.tokens.color.accentSoft,
+              color: tokens.tokens.color.accentDark,
+              borderRadius: 12,
+              padding: '4px 14px',
+              fontFamily: tokens.tokens.font.display,
+              fontWeight: 900,
+            }}
+          >
             ?
           </span>
         </div>
       );
+      break;
     }
     case 'shape-tap': {
       const target = (meta.shape as string) ?? 'circle';
-      const glyph = SHAPE_GLYPH[target] ?? '⬛';
-      return (
-        <div className="py-4 text-6xl" aria-hidden="true">
-          {glyph}
+      visual = (
+        <div style={{ fontSize: 80 }} aria-hidden="true">
+          {SHAPE_GLYPH[target] ?? '⬛'}
         </div>
       );
+      break;
+    }
+    case 'groups-of': {
+      const groups = (meta.groups as number) ?? 0;
+      const each = (meta.each as number) ?? 0;
+      visual = (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          {Array.from({ length: groups }, (_, gi) => (
+            <div
+              key={gi}
+              style={{ display: 'flex', gap: 4, justifyContent: 'center' }}
+            >
+              {Array.from({ length: each }, (_, ei) => (
+                <ObjectGlyph key={ei} kind={kind} size={26} />
+              ))}
+            </div>
+          ))}
+        </div>
+      );
+      break;
     }
     case 'share-equally': {
       const total = (meta.total as number) ?? 0;
       const groups = (meta.groups as number) ?? 1;
-      return (
-        <div className="py-4">
-          <div className="text-3xl">{'🍪'.repeat(total)}</div>
-          <div className="text-fg/60 text-sm mt-2">
-            {groups} {groups === 1 ? 'friend' : 'friends'}
-          </div>
-        </div>
-      );
-    }
-    case 'match-quantity': {
-      const q = (meta.quantity as number) ?? 0;
-      return (
-        <div className="flex justify-center gap-1 text-3xl py-4">
-          {Array.from({ length: q }, (_, i) => (
-            <span key={i} aria-hidden="true">
-              🔵
-            </span>
-          ))}
-        </div>
-      );
-    }
-    case 'count-tens': {
-      const tens = (meta.tens as number) ?? 0;
-      const ones = (meta.ones as number) ?? 0;
-      return (
-        <div className="py-4">
-          <div className="text-fg/70 text-xs mb-1">Onluklar</div>
-          <div className="flex flex-wrap justify-center gap-1 mb-3">
-            {Array.from({ length: tens }, (_, i) => (
-              <span key={i} className="text-2xl" aria-hidden="true">
-                🟦
-              </span>
+      visual = (
+        <div style={{ textAlign: 'center' }}>
+          <div
+            style={{
+              display: 'flex',
+              gap: 4,
+              justifyContent: 'center',
+              flexWrap: 'wrap',
+            }}
+          >
+            {Array.from({ length: total }, (_, i) => (
+              <ObjectGlyph key={i} kind="candy" size={28} />
             ))}
           </div>
-          <div className="text-fg/70 text-xs mb-1">Birlikler</div>
-          <div className="flex flex-wrap justify-center gap-1">
-            {Array.from({ length: ones }, (_, i) => (
-              <span key={i} className="text-2xl" aria-hidden="true">
-                🟨
-              </span>
-            ))}
+          <div style={{ marginTop: 8, fontSize: 13, color: '#64748B' }}>
+            {groups} {groups === 1 ? 'kişi' : 'kişiye'}
           </div>
         </div>
       );
-    }
-    case 'place-value-2digit': {
-      const n = (meta.n as number) ?? 0;
-      return (
-        <div className="py-4 text-center">
-          <div className="font-display text-5xl text-primary-fg tabular-nums">
-            {n}
-          </div>
-        </div>
-      );
-    }
-    case 'place-value-3digit': {
-      const n = (meta.n as number) ?? 0;
-      return (
-        <div className="py-4 text-center">
-          <div className="font-display text-5xl text-primary-fg tabular-nums">
-            {n}
-          </div>
-        </div>
-      );
+      break;
     }
     case 'skip-counting': {
       const display = (meta.display as string[] | undefined) ?? [];
-      return (
-        <div className="flex items-center justify-center gap-2 text-2xl py-4 flex-wrap tabular-nums">
+      visual = (
+        <div
+          style={{
+            display: 'flex',
+            gap: 8,
+            justifyContent: 'center',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+          }}
+        >
           {display.map((tok, i) => (
             <span
               key={i}
-              className={
-                tok === '?'
-                  ? 'bg-accent/30 rounded-soft px-3 py-1 font-display'
-                  : 'font-display'
-              }
+              style={{
+                fontFamily: tokens.tokens.font.display,
+                fontWeight: 800,
+                fontSize: 24,
+                color:
+                  tok === '?'
+                    ? tokens.tokens.color.accentDark
+                    : '#0F172A',
+                background:
+                  tok === '?' ? tokens.tokens.color.accentSoft : 'transparent',
+                padding: tok === '?' ? '4px 14px' : '0',
+                borderRadius: 12,
+                fontVariantNumeric: 'tabular-nums',
+              }}
             >
               {tok}
             </span>
           ))}
         </div>
       );
+      break;
     }
-    case 'tap-number-2digit':
-    case 'tap-number-3digit': {
-      const n = (meta.n as number) ?? 0;
-      return (
-        <div className="py-2 text-center text-fg/70 text-sm">
-          ({n})
-        </div>
-      );
-    }
-    case 'add-numeric':
-    case 'sub-numeric':
-    case 'add-2digit-no-carry':
-    case 'sub-2digit-no-regroup':
-    case 'add-2digit-carry':
-    case 'sub-2digit-regroup':
-    case 'mult-small':
-    case 'div-small':
-    case 'mult-1d-by-2d':
-    case 'div-with-remainder':
-    case 'add-3digit':
-    case 'sub-3digit': {
+    default: {
       const expr = (meta.expression as string) ?? '';
-      return (
-        <div className="py-4 font-display text-4xl text-primary-fg tabular-nums text-center">
-          {expr} = ?
-        </div>
-      );
+      if (expr) {
+        visual = (
+          <div
+            style={{
+              fontFamily: tokens.tokens.font.display,
+              fontWeight: 800,
+              fontSize: 44,
+              color: tokens.tokens.color.accentDark,
+              fontVariantNumeric: 'tabular-nums',
+            }}
+          >
+            {expr} = ?
+          </div>
+        );
+      }
     }
-    default:
-      return null;
   }
+
+  return (
+    <ExerciseFrame
+      prompt={promptText}
+      onSpeak={() => audio.speak(promptText, language)}
+      options={exercise.options}
+      onAnswer={checkAndFire}
+      tilesLayout={layout}
+      bigTiles={big}
+      hintsUsed={hintsUsed}
+    >
+      {visual}
+    </ExerciseFrame>
+  );
 }

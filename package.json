@@ -26,6 +26,8 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@fontsource/baloo-2": "^5.2.7",
+    "@fontsource/nunito": "^5.2.7",
     "@types/howler": "^2.2.13",
     "clsx": "^2.1.1",
     "framer-motion": "^12.39.0",
