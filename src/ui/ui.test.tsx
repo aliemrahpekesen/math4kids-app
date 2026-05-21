@@ -52,7 +52,7 @@ describe('design system primitives', () => {
   });
 
   it('CharacterAvatar renders emoji for given key', () => {
-    render(<CharacterAvatar avatarKey="fox" />);
+    render(<CharacterAvatar avatarKey="jungle-fox" />);
     expect(screen.getByLabelText('fox avatar')).toBeInTheDocument();
   });
 

@@ -107,7 +107,7 @@ test.describe('route coverage — no crashes anywhere', () => {
     await page.getByRole('button', { name: 'Türkçe' }).click();
     await page.getByPlaceholder(/adın ne olsun/i).fill('Route');
     await page.getByRole('button', { name: /İleri/i }).click();
-    await page.getByRole('button', { name: 'fox' }).click();
+    await page.locator('button[aria-label="jungle-fox"]').click();
     await page.getByRole('button', { name: /İleri/i }).click();
     await page.getByRole('button', { name: /İleri/i }).click();
     await page.getByRole('button', { name: /atla/i }).click();
