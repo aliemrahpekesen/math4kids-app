@@ -4,6 +4,7 @@ import { LoggerProvider } from './providers/LoggerProvider';
 import { GlobalErrorBoundary } from './providers/GlobalErrorBoundary';
 import { I18nProvider } from './i18n/I18nProvider';
 import { AudioProvider } from './audio/AudioProvider';
+import { PWAUpdatePrompt } from './pwa/PWAUpdatePrompt';
 import { router } from './routing/router';
 
 export function App() {
@@ -14,6 +15,7 @@ export function App() {
           <AudioProvider>
             <GlobalErrorBoundary>
               <RouterProvider router={router} />
+              <PWAUpdatePrompt />
             </GlobalErrorBoundary>
           </AudioProvider>
         </ThemeProvider>
