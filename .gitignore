@@ -57,3 +57,6 @@ htmlcov/
 # Playwright runtime artifacts
 test-results/
 playwright-report/
+
+# Storybook build output
+storybook-static/

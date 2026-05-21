@@ -21,6 +21,8 @@
     "test:watch": "vitest",
     "e2e": "playwright test",
     "typecheck": "tsc --noEmit",
+    "storybook": "storybook dev -p 6006 --no-open",
+    "build-storybook": "storybook build",
     "prepare": "husky"
   },
   "dependencies": {
@@ -33,6 +35,8 @@
     "@commitlint/config-conventional": "^21.0.1",
     "@eslint/js": "^9.39.4",
     "@playwright/test": "^1.60.0",
+    "@storybook/addon-a11y": "^10.4.0",
+    "@storybook/react-vite": "^10.4.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
@@ -49,6 +53,7 @@
     "husky": "^9.1.7",
     "jsdom": "^29.1.1",
     "prettier": "^3.8.3",
+    "storybook": "^10.4.0",
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.59.4",
     "vite": "^5.4.10",
