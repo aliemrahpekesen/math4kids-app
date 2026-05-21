@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import type { LevelId, LevelProgress, Streaks } from './types';
+import type { Difficulty, LevelId, LevelProgress, Streaks } from './types';
+import { scoreStars, DEFAULT_DIFFICULTY } from '../engines/difficulty';
 
 interface ProgressStore {
   levels: Record<LevelId, LevelProgress>;
@@ -10,6 +11,7 @@ interface ProgressStore {
     accuracy: number;
     hintsUsed: number;
     elapsedMs: number;
+    difficulty?: Difficulty;
   }) => { stars: 0 | 1 | 2 | 3; unlocked: LevelId | null };
   hydrate: (input: {
     levels: Record<LevelId, LevelProgress>;
@@ -25,20 +27,19 @@ const initialStreaks: Streaks = {
   lastDay: '',
 };
 
-function computeStars(accuracy: number, hintsUsed: number): 0 | 1 | 2 | 3 {
-  if (accuracy >= 0.85 && hintsUsed <= 1) return 3;
-  if (accuracy >= 0.7) return 2;
-  if (accuracy > 0) return 1;
-  return 0;
-}
-
 export const useProgressStore = create<ProgressStore>((set, get) => ({
   levels: {},
   currentLevelId: 1,
   streaks: initialStreaks,
 
-  recordResult: ({ levelId, accuracy, hintsUsed, elapsedMs }) => {
-    const stars = computeStars(accuracy, hintsUsed);
+  recordResult: ({
+    levelId,
+    accuracy,
+    hintsUsed,
+    elapsedMs,
+    difficulty = DEFAULT_DIFFICULTY,
+  }) => {
+    const stars = scoreStars(accuracy, hintsUsed, difficulty);
     const now = new Date().toISOString();
     set((state) => {
       const prev = state.levels[levelId];
@@ -53,8 +54,9 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
       return { levels: { ...state.levels, [levelId]: next } };
     });
 
-    // Unlock logic: if the just-completed level earned 3 stars, the next
-    // level becomes available. Caller decides whether to navigate.
+    // Unlock signal: 3 stars on this level → its in-track successor becomes
+    // available. Caller (LessonQuiz) computes the actual next-level ID via
+    // `getNextLevel(levelId)` — we return only a boolean-ish hint here.
     const newRecord = get().levels[levelId];
     const unlocked = newRecord?.bestStars === 3 ? levelId + 1 : null;
     return { stars, unlocked };

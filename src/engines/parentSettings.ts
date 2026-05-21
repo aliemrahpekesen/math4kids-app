@@ -146,3 +146,41 @@ export function remainingCooldownMs(
   const until = new Date(state.lockedUntil).getTime();
   return Math.max(0, until - now);
 }
+
+/**
+ * "Forgot PIN" recovery challenge — a multi-step arithmetic problem
+ * a 6-year-old cannot reasonably solve in their head. Generated from
+ * a seed so the prompt + answer are deterministic per session.
+ *
+ * Pattern: (a × b) + c − d
+ *   a ∈ [11, 19], b ∈ [3, 9]  → product 33..171
+ *   c ∈ [10, 49], d ∈ [10, 49]
+ *
+ * Adult mental-math feasible, kindergarten reach: no.
+ */
+export interface ForgotPinChallenge {
+  prompt: string;
+  answer: number;
+}
+
+export function generateForgotPinChallenge(seed: number): ForgotPinChallenge {
+  let s = seed >>> 0 || 1;
+  const next = (): number => {
+    s = (s + 0x6d2b79f5) >>> 0;
+    let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  const pick = (min: number, max: number): number =>
+    Math.floor(next() * (max - min + 1)) + min;
+
+  const a = pick(11, 19);
+  const b = pick(3, 9);
+  const c = pick(10, 49);
+  const d = pick(10, 49);
+  return {
+    prompt: `(${a} × ${b}) + ${c} − ${d}`,
+    answer: a * b + c - d,
+  };
+}

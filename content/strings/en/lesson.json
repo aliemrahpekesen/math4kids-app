@@ -1,4 +1,8 @@
 {
+  "tracks": {
+    "numbers": "🔢 Numbers",
+    "operations": "➕ Operations"
+  },
   "intro": "New lesson",
   "practice": "Practice",
   "quiz": "Quiz",

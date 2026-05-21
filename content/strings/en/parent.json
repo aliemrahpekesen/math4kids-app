@@ -5,6 +5,11 @@
   "confirmPin": "Re-enter PIN",
   "wrongPin": "Wrong PIN",
   "cooldown": "Wait {{seconds}} seconds",
+  "forgotPinLink": "Forgot PIN",
+  "forgotPinTitle": "Reset PIN",
+  "forgotPinInstructions": "Only an adult can solve this. Enter the correct result, then set a new PIN.",
+  "forgotPinAnswer": "Answer",
+  "forgotPinWrongAnswer": "Wrong answer. Try again.",
   "dashboard": "Parent dashboard",
   "progress": "Progress",
   "totalStars": "Total stars",
@@ -31,5 +36,14 @@
   "resetProgressConfirm": "All progress will be deleted. Are you sure?",
   "fullWipe": "Wipe all data",
   "fullWipeConfirm": "ALL profiles and progress on this device will be deleted. Are you sure?",
-  "exitParentArea": "Exit parent area"
+  "exitParentArea": "Exit parent area",
+  "difficultyLabel": "Difficulty for {{name}}",
+  "difficulty": {
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard",
+    "easyHint": "4-question quizzes, hints allowed; 70% accuracy earns 3 stars.",
+    "mediumHint": "6-question quizzes, 1 hint allowed; 85% accuracy earns 3 stars.",
+    "hardHint": "8-question quizzes, no hints; 95% accuracy earns 3 stars."
+  }
 }

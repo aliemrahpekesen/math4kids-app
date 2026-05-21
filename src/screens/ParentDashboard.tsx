@@ -6,6 +6,7 @@ import { useRewardStore } from '../state/rewardStore';
 import { useProfileStore } from '../state/profileStore';
 import { useSessionStore } from '../state/sessionStore';
 import { getCurriculum } from '../engines/curriculum';
+import { exitToHome } from '../routing/exitToHome';
 
 function formatTime(ms: number): string {
   const total = Math.floor(ms / 1000);
@@ -61,7 +62,7 @@ export function ParentDashboard() {
           variant="ghost"
           onClick={() => {
             revoke();
-            void navigate('/map');
+            void exitToHome(navigate);
           }}
         >
           {t('exitParentArea')}

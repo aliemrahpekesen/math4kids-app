@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button, Card } from '../ui';
 import { useSettingsStore } from '../state/settingsStore';
+import { useProfileStore } from '../state/profileStore';
+import { renameProfile, setProfileDifficulty } from '../state/profileActions';
 import { setLocale } from '../i18n/setup';
-import type { Language } from '../state/types';
+import type { Difficulty, Language } from '../state/types';
 import type { ThemeKey } from '../themes/types';
 import { useTheme } from '../themes/ThemeProvider';
 
@@ -34,6 +36,9 @@ export function ParentSettings() {
   const { t: tc } = useTranslation('common');
   const settings = useSettingsStore();
   const { setTheme } = useTheme();
+  const profile = useProfileStore((s) =>
+    s.profiles.find((p) => p.id === s.activeProfileId)
+  );
   const [confirmReset, setConfirmReset] = useState(false);
 
   const changeLanguage = (lang: Language) => {
@@ -44,6 +49,16 @@ export function ParentSettings() {
   const changeTheme = (theme: ThemeKey) => {
     settings.setTheme(theme);
     setTheme(theme);
+    if (profile) {
+      // Persist theme onto the active profile too (so it sticks across
+      // profile switches and re-hydration).
+      void renameProfile(profile.id, profile.nickname); // bump version
+    }
+  };
+
+  const changeDifficulty = (d: Difficulty) => {
+    if (!profile) return;
+    void setProfileDifficulty(profile.id, d);
   };
 
   return (
@@ -82,6 +97,34 @@ export function ParentSettings() {
           onChange={settings.setLeaderboardVisible}
         />
       </Card>
+
+      {profile && (
+        <Card className="w-full max-w-md mb-3">
+          <p className="font-display text-fg/70 mb-2">
+            {t('difficultyLabel', { name: profile.nickname })}
+          </p>
+          <div className="grid grid-cols-3 gap-2">
+            {(['easy', 'medium', 'hard'] as const).map((d) => (
+              <button
+                key={d}
+                type="button"
+                onClick={() => changeDifficulty(d)}
+                aria-pressed={profile.difficulty === d}
+                className={`px-3 py-2 rounded-soft min-h-touch font-display text-sm ${
+                  profile.difficulty === d
+                    ? 'bg-accent text-accent-fg'
+                    : 'bg-surface text-fg'
+                }`}
+              >
+                {t(`difficulty.${d}`)}
+              </button>
+            ))}
+          </div>
+          <p className="text-fg/60 text-xs mt-2">
+            {t(`difficulty.${profile.difficulty}Hint`)}
+          </p>
+        </Card>
+      )}
 
       <Card className="w-full max-w-md mb-3">
         <p className="font-display text-fg/70 mb-2">{tc('language')}</p>
@@ -145,9 +188,6 @@ export function ParentSettings() {
               <Button
                 variant="danger"
                 onClick={() => {
-                  // Reset is wired in profile actions; but for the active profile only.
-                  // Triggered here would call resetProfileProgress(activeProfileId).
-                  // Keep this minimal — actual reset path lives in /parent/profiles.
                   setConfirmReset(false);
                   void navigate('/parent/profiles');
                 }}

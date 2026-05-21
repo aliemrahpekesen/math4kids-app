@@ -4,11 +4,15 @@ import type { ThemeKey } from '../themes/types';
 export type ProfileId = string; // UUIDv4
 export type LevelId = number;
 
+export type Difficulty = 'easy' | 'medium' | 'hard';
+
 export interface ChildProfile {
   id: ProfileId;
   nickname: string;
   avatarKey: AvatarKey;
   themeKey: ThemeKey;
+  /** Per-profile difficulty drives quiz length, hint cost, and star rubric. */
+  difficulty: Difficulty;
   createdAt: string;
   version: number;
   updatedAt: string;

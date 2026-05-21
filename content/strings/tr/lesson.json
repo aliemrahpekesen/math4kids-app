@@ -1,4 +1,8 @@
 {
+  "tracks": {
+    "numbers": "🔢 Sayılar",
+    "operations": "➕ Dört İşlem"
+  },
   "intro": "Yeni bir ders",
   "practice": "Pratik",
   "quiz": "Test",
