@@ -10,10 +10,10 @@ const preview: Preview = {
       },
     },
     backgrounds: {
-      default: 'light',
+      default: 'space',
       values: [
+        { name: 'space', value: '#0b1437' },
         { name: 'light', value: '#f8fafc' },
-        { name: 'dark', value: '#0b1437' },
       ],
     },
     a11y: {
@@ -32,6 +32,20 @@ const preview: Preview = {
           { value: 'tr', title: 'Türkçe' },
           { value: 'en', title: 'English' },
           { value: 'de', title: 'Deutsch' },
+        ],
+      },
+    },
+    theme: {
+      description: 'Active theme',
+      defaultValue: 'space',
+      toolbar: {
+        title: 'Theme',
+        icon: 'paintbrush',
+        items: [
+          { value: 'space', title: 'Uzay' },
+          { value: 'jungle', title: 'Orman (preview)' },
+          { value: 'ocean', title: 'Okyanus (preview)' },
+          { value: 'candy', title: 'Şeker (preview)' },
         ],
       },
     },

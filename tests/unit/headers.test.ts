@@ -6,7 +6,10 @@ describe('public/_headers (Cloudflare Pages CSP + cache policy)', () => {
   let contents = '';
 
   beforeAll(() => {
-    contents = readFileSync(resolve(__dirname, '../../public/_headers'), 'utf8');
+    contents = readFileSync(
+      resolve(__dirname, '../../public/_headers'),
+      'utf8'
+    );
   });
 
   it('defines the CSP for the root scope', () => {
@@ -48,7 +51,9 @@ describe('public/_headers (Cloudflare Pages CSP + cache policy)', () => {
     expect(contents).toMatch(/^\/$\n {2}Cache-Control: no-cache$/m);
     expect(contents).toMatch(/^\/index\.html$\n {2}Cache-Control: no-cache$/m);
     expect(contents).toMatch(/^\/sw\.js$\n {2}Cache-Control: no-cache$/m);
-    expect(contents).toMatch(/^\/manifest\.webmanifest$\n {2}Cache-Control: no-cache$/m);
+    expect(contents).toMatch(
+      /^\/manifest\.webmanifest$\n {2}Cache-Control: no-cache$/m
+    );
   });
 
   it('marks hashed assets as immutable + max-age=31536000', () => {
