@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button, Card } from '../ui';
 import {
-  AVATAR_KEYS,
+  AVATARS_BY_THEME,
+  AVATAR_THEME_KEYS,
   CharacterAvatar,
   type AvatarKey,
 } from '../ui/CharacterAvatar';
@@ -13,10 +14,12 @@ interface DraftProfile {
   avatarKey: AvatarKey;
 }
 
+const DEFAULT_AVATAR: AvatarKey = 'space-astronaut';
+
 /* eslint-disable react-refresh/only-export-components -- module-level draft state colocated with the onboarding screens that share it. */
 
 // Module-level scratch state — survives onboarding-step navigations.
-let draft: DraftProfile = { nickname: '', avatarKey: 'fox' };
+let draft: DraftProfile = { nickname: '', avatarKey: DEFAULT_AVATAR };
 export function getOnboardingDraft(): DraftProfile {
   return { ...draft };
 }
@@ -24,7 +27,7 @@ export function setOnboardingDraft(next: Partial<DraftProfile>): void {
   draft = { ...draft, ...next };
 }
 export function resetOnboardingDraft(): void {
-  draft = { nickname: '', avatarKey: 'fox' };
+  draft = { nickname: '', avatarKey: DEFAULT_AVATAR };
 }
 
 /* eslint-enable react-refresh/only-export-components */
@@ -84,27 +87,36 @@ export function OnboardingAvatar() {
   };
 
   return (
-    <main className="app-shell">
+    <main className="app-shell !justify-start !pt-6 !pb-12">
       <Card className="max-w-md w-full text-center">
         <h1 className="font-display text-3xl text-primary-fg mb-4">
           {t('chooseAvatar')}
         </h1>
-        <div className="grid grid-cols-3 gap-3 mb-6">
-          {AVATAR_KEYS.map((key) => (
-            <button
-              key={key}
-              type="button"
-              onClick={() => setSelected(key)}
-              aria-label={key}
-              aria-pressed={selected === key}
-              className={`p-2 rounded-soft border-4 transition-all min-w-touch min-h-touch ${
-                selected === key
-                  ? 'border-accent shadow-glow'
-                  : 'border-transparent'
-              }`}
-            >
-              <CharacterAvatar avatarKey={key} size="md" />
-            </button>
+        <div className="flex flex-col gap-4 mb-6">
+          {AVATAR_THEME_KEYS.map((themeKey) => (
+            <div key={themeKey}>
+              <h2 className="font-display text-sm text-fg/70 mb-2 text-left">
+                {t(`themes.${themeKey}`)}
+              </h2>
+              <div className="grid grid-cols-3 gap-2">
+                {AVATARS_BY_THEME[themeKey].map((key) => (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setSelected(key)}
+                    aria-label={key}
+                    aria-pressed={selected === key}
+                    className={`p-2 rounded-soft border-4 transition-all min-w-touch min-h-touch ${
+                      selected === key
+                        ? 'border-accent shadow-glow'
+                        : 'border-transparent'
+                    }`}
+                  >
+                    <CharacterAvatar avatarKey={key} size="md" />
+                  </button>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
         <Button variant="primary" onClick={submit} className="w-full">

@@ -66,7 +66,7 @@ test.describe('Math4KidsApp — Acceptance Criteria (AC-01..AC-18)', () => {
     await page.getByPlaceholder(/adın ne olsun/i).fill('Test');
     await page.getByRole('button', { name: /İleri/i }).click();
     // Avatar screen: pick the first one (fox)
-    await page.getByRole('button', { name: 'fox' }).click();
+    await page.locator('button[aria-label="jungle-fox"]').click();
     await page.getByRole('button', { name: /İleri/i }).click();
     // Theme: Space already selected
     await page.getByRole('button', { name: /İleri/i }).click();
@@ -100,7 +100,7 @@ test.describe('Math4KidsApp — Acceptance Criteria (AC-01..AC-18)', () => {
     await page.getByRole('button', { name: 'Türkçe' }).click();
     await page.getByPlaceholder(/adın ne olsun/i).fill('A11y');
     await page.getByRole('button', { name: /İleri/i }).click();
-    await page.getByRole('button', { name: 'fox' }).click();
+    await page.locator('button[aria-label="jungle-fox"]').click();
     await page.getByRole('button', { name: /İleri/i }).click();
     await page.getByRole('button', { name: /İleri/i }).click();
     await page.getByRole('button', { name: /atla/i }).click();

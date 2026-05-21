@@ -45,7 +45,7 @@ export function LessonIntro() {
           aria-label="Replay narration"
           className="block mx-auto mb-3"
         >
-          <CharacterAvatar avatarKey="astronaut" size="lg" />
+          <CharacterAvatar avatarKey="space-astronaut" size="lg" />
         </button>
         <h1 className="font-display text-3xl text-primary-fg mb-2">{title}</h1>
         <p className="text-fg/80 mb-6">{welcome}</p>
