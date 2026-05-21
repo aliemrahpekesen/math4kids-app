@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Button, Card } from '../ui';
+import { Card } from '../ui';
 import { getLevelById } from '../engines/curriculum';
 import { useTheme } from '../themes/ThemeProvider';
 import { useAudio } from '../audio/AudioProvider';
@@ -236,10 +236,14 @@ export function LessonTeach() {
   if (!level) {
     return (
       <main className="app-shell">
-        <p className="text-fg/70">{t('noLevelsForTier')}</p>
-        <Button variant="primary" onClick={() => void navigate('/map')}>
-          {t('backToMap')}
-        </Button>
+        <button
+          type="button"
+          onClick={() => void navigate('/map')}
+          aria-label={t('backToMap')}
+          className="w-touch h-touch rounded-soft bg-surface/60 text-3xl"
+        >
+          🏠
+        </button>
       </main>
     );
   }
@@ -249,17 +253,14 @@ export function LessonTeach() {
     return (
       <main className="app-shell">
         <Card className="max-w-md w-full text-center">
-          <h1 className="font-display text-2xl text-primary-fg mb-3">
-            {t(`levelTitles.${levelId}`)}
-          </h1>
-          <p className="text-fg/80 mb-6">{t('teach.noNumbersHere')}</p>
-          <Button
-            variant="primary"
+          <button
+            type="button"
             onClick={() => void navigate(`/lesson/${levelId}/practice`)}
-            className="w-full"
+            aria-label={t('startPractice')}
+            className="mx-auto block w-28 h-28 rounded-full bg-accent text-accent-fg text-6xl shadow-glow active:scale-95"
           >
-            {t('startPractice')}
-          </Button>
+            ▶
+          </button>
         </Card>
       </main>
     );
@@ -280,27 +281,17 @@ export function LessonTeach() {
   return (
     <main className="app-shell !justify-start !pt-6 !pb-12">
       <Card className="w-full max-w-md text-center">
-        <h1 className="font-display text-lg text-fg/80 mb-2">
-          {t(`levelTitles.${levelId}`)}
-        </h1>
-
         <button
           type="button"
           onClick={() =>
             audio.speak(numberWord(current, language) + ' ' + current, language)
           }
           className="block w-full mb-3 group"
-          aria-label={`Replay narration: ${current}`}
+          aria-label={`${t('teach.tapToHear')}: ${current}`}
         >
-          <div className={`font-display text-7xl ${REP_COLORS[0]} tabular-nums`}>
+          <div className={`font-display text-8xl ${REP_COLORS[0]} tabular-nums leading-none`}>
             {current}
           </div>
-          {current <= 10 && (
-            <div className="font-display text-xl text-fg/70 mt-1">
-              {numberWord(current, language)}
-            </div>
-          )}
-          <div className="text-fg/40 text-xs mt-1">🔊 {t('teach.tapToHear')}</div>
         </button>
 
         <div className="space-y-3 mb-4 border-t border-fg/10 pt-3">
@@ -310,26 +301,34 @@ export function LessonTeach() {
           {current <= 10 && <Fingers n={current} glyph={glyph} />}
         </div>
 
-        <div className="flex justify-between items-center mt-4">
-          <Button
-            variant="ghost"
+        <div className="flex justify-between items-center mt-4 gap-3">
+          <button
+            type="button"
             onClick={goPrev}
             disabled={idx === 0}
-            className="min-w-[60px]"
             aria-label={tc('back')}
+            className="w-touch h-touch rounded-soft bg-surface/60 text-fg text-3xl font-display disabled:opacity-30"
           >
             ←
-          </Button>
-          <span className="text-fg/60 text-sm">
-            {idx + 1} / {numbers.length}
-          </span>
-          <Button
-            variant="primary"
+          </button>
+          <div className="flex gap-1.5" aria-hidden="true">
+            {numbers.map((_, i) => (
+              <span
+                key={i}
+                className={`w-2.5 h-2.5 rounded-full ${
+                  i === idx ? 'bg-accent' : 'bg-fg/20'
+                }`}
+              />
+            ))}
+          </div>
+          <button
+            type="button"
             onClick={goNext}
-            className="min-w-[140px]"
+            aria-label={isLast ? t('startPractice') : tc('next')}
+            className="w-touch h-touch rounded-soft bg-accent text-accent-fg text-3xl font-display shadow-glow"
           >
-            {isLast ? t('startPractice') : tc('next') + ' →'}
-          </Button>
+            →
+          </button>
         </div>
       </Card>
     </main>

@@ -36,15 +36,18 @@ export function LessonPractice() {
         variant={feedback === 'correct' ? 'success' : 'info'}
         durationMs={800}
       >
-        {feedback === 'correct' ? t('correct') : t('tryAgain')}
+        <span className="text-3xl" aria-hidden="true">
+          {feedback === 'correct' ? '✨' : '💪'}
+        </span>
       </Toast>
       <div className="fixed top-4 right-4">
         <button
           type="button"
           onClick={() => void navigate(`/lesson/${levelId}/quiz`)}
-          className="px-4 py-2 rounded-soft bg-accent text-accent-fg font-display min-w-touch min-h-touch"
+          aria-label={t('startQuiz')}
+          className="w-touch h-touch rounded-full bg-accent text-accent-fg text-3xl shadow-glow"
         >
-          {t('startQuiz')}
+          ▶
         </button>
       </div>
     </>

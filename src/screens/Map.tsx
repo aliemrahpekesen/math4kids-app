@@ -1,9 +1,9 @@
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Button, Card, LevelNode, CoinBadge, CharacterAvatar } from '../ui';
+import { Card, LevelNode, CoinBadge, CharacterAvatar } from '../ui';
 import {
   getLevelsForTrackAndDifficulty,
-  getTracks,
   isUnlocked,
   FINAL_LEVEL_ID,
 } from '../engines/curriculum';
@@ -12,6 +12,8 @@ import type { LevelProgress } from '../state/types';
 import { useProgressStore } from '../state/progressStore';
 import { useRewardStore } from '../state/rewardStore';
 import { useProfileStore } from '../state/profileStore';
+import { useSettingsStore } from '../state/settingsStore';
+import { useAudio } from '../audio/AudioProvider';
 import { DEFAULT_DIFFICULTY } from '../engines/difficulty';
 import type { LevelNodeState } from '../ui/LevelNode';
 
@@ -36,7 +38,8 @@ export function Map() {
   const trackId: TrackId = isTrackId(rawTrackId) ? rawTrackId : 'numbers';
   const { t } = useTranslation('common');
   const { t: tl } = useTranslation('lesson');
-  const { t: tp } = useTranslation('parent');
+  const language = useSettingsStore((s) => s.language);
+  const audio = useAudio();
   const progress = useProgressStore((s) => s.levels);
   const coins = useRewardStore((s) => s.coins);
   const profile = useProfileStore((s) =>
@@ -45,10 +48,17 @@ export function Map() {
 
   const difficulty = profile?.difficulty ?? DEFAULT_DIFFICULTY;
   const tierLevels = getLevelsForTrackAndDifficulty(trackId, difficulty);
-  const trackLabel = tl(
-    getTracks().find((tr) => tr.id === trackId)?.labelKey ?? `tracks.${trackId}`
-  );
   const currentId = currentLevelInTier(tierLevels, progress);
+
+  // Speak the current-level cue on entry so the child knows where to tap.
+  useEffect(() => {
+    if (currentId !== null) {
+      audio.speak(tl(`levelTitles.${currentId}`), language);
+    }
+    return () => {
+      audio.stopSpeaking();
+    };
+  }, [audio, language, tl, currentId]);
 
   const goLesson = (levelId: number) => {
     void navigate(`/lesson/${levelId}`);
@@ -65,7 +75,6 @@ export function Map() {
             aria-label={profile.nickname}
           >
             <CharacterAvatar avatarKey={profile.avatarKey} size="sm" />
-            <span className="font-display">{profile.nickname}</span>
           </button>
         ) : (
           <span />
@@ -83,22 +92,21 @@ export function Map() {
         </div>
       </div>
 
-      <div className="w-full max-w-md flex justify-between items-center mb-3 px-2">
-        <Button variant="ghost" onClick={() => void navigate('/map')}>
-          ← {tl('pickPathBack')}
-        </Button>
-        <span className="font-display text-fg/70 text-sm">
-          {tp(`difficulty.${difficulty}`)}
-        </span>
+      <div className="w-full max-w-md flex justify-start items-center mb-3 px-2">
+        <button
+          type="button"
+          onClick={() => void navigate('/map')}
+          className="min-w-touch min-h-touch px-3 rounded-soft bg-surface/60 text-fg text-2xl font-display"
+          aria-label={tl('pickPathBack')}
+        >
+          ←
+        </button>
       </div>
 
       <Card className="w-full max-w-md mb-4" data-track={trackId}>
-        <h2 className="font-display text-xl text-primary-fg text-center mb-3">
-          {trackLabel}
-        </h2>
         {tierLevels.length === 0 ? (
-          <p className="text-fg/60 text-center py-6">
-            {tl('noLevelsForTier')}
+          <p className="text-center py-6 text-4xl" aria-label={tl('noLevelsForTier')}>
+            🚧
           </p>
         ) : (
           <div className="grid grid-cols-3 gap-4 justify-items-center">
@@ -130,18 +138,20 @@ export function Map() {
         )}
       </Card>
 
-      <div className="mt-2 flex gap-2">
+      <div className="mt-2 flex gap-3">
         <button
           type="button"
           onClick={() => void navigate('/leaderboard')}
-          className="px-4 py-2 rounded-soft bg-surface/60 text-fg font-display min-h-touch"
+          className="w-touch h-touch rounded-soft bg-surface/60 text-2xl"
+          aria-label="leaderboard"
         >
           🏆
         </button>
         <button
           type="button"
           onClick={() => void navigate('/rewards')}
-          className="px-4 py-2 rounded-soft bg-surface/60 text-fg font-display min-h-touch"
+          className="w-touch h-touch rounded-soft bg-surface/60 text-2xl"
+          aria-label="rewards"
         >
           🎁
         </button>

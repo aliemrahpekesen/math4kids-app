@@ -1,12 +1,25 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Card, CoinBadge, CharacterAvatar } from '../ui';
 import { useRewardStore } from '../state/rewardStore';
 import { useProfileStore } from '../state/profileStore';
+import { useSettingsStore } from '../state/settingsStore';
+import { useAudio } from '../audio/AudioProvider';
 import { getTracks } from '../engines/curriculum';
 import type { TrackId } from '../engines/types';
 
-const TRACK_EMOJI: Record<TrackId, string> = {
+/**
+ * Big-glyph cluster shown on each track card. Numbers track shows the digits
+ * 0–9 dancing; operations track shows the four operators. Reads as a "pictogram"
+ * for a non-literate child.
+ */
+const TRACK_GLYPHS: Record<TrackId, string> = {
+  numbers: '1 2 3',
+  operations: '+ − × ÷',
+};
+
+const TRACK_ICON: Record<TrackId, string> = {
   numbers: '🔢',
   operations: '➕',
 };
@@ -17,9 +30,18 @@ export function TrackPicker() {
   const { t: tl } = useTranslation('lesson');
   const tracks = getTracks();
   const coins = useRewardStore((s) => s.coins);
+  const language = useSettingsStore((s) => s.language);
+  const audio = useAudio();
   const profile = useProfileStore((s) =>
     s.profiles.find((p) => p.id === s.activeProfileId)
   );
+
+  useEffect(() => {
+    audio.speak(tl('pickYourPath'), language);
+    return () => {
+      audio.stopSpeaking();
+    };
+  }, [audio, language, tl]);
 
   const goTrack = (id: TrackId) => {
     void navigate(`/map/${id}`);
@@ -27,7 +49,7 @@ export function TrackPicker() {
 
   return (
     <main className="app-shell !justify-start !pt-6 !pb-12">
-      <div className="w-full max-w-md flex items-center justify-between mb-4 px-2">
+      <div className="w-full max-w-md flex items-center justify-between mb-6 px-2">
         {profile ? (
           <button
             type="button"
@@ -36,7 +58,6 @@ export function TrackPicker() {
             aria-label={profile.nickname}
           >
             <CharacterAvatar avatarKey={profile.avatarKey} size="sm" />
-            <span className="font-display">{profile.nickname}</span>
           </button>
         ) : (
           <span />
@@ -54,11 +75,7 @@ export function TrackPicker() {
         </div>
       </div>
 
-      <h1 className="font-display text-2xl text-primary-fg text-center mb-6">
-        {tl('pickYourPath')}
-      </h1>
-
-      <div className="w-full max-w-md flex flex-col gap-4">
+      <div className="w-full max-w-md flex flex-col gap-5">
         {tracks
           .slice()
           .sort((a, b) => a.order - b.order)
@@ -70,21 +87,16 @@ export function TrackPicker() {
               aria-label={tl(tr.labelKey)}
               className="block w-full text-left transition-transform active:scale-95"
             >
-              <Card className="!p-6 hover:brightness-110">
-                <div className="flex items-center gap-4">
-                  <span className="text-5xl" aria-hidden="true">
-                    {TRACK_EMOJI[tr.id]}
+              <Card className="!p-8 hover:brightness-110">
+                <div className="flex items-center justify-center gap-6">
+                  <span className="text-7xl" aria-hidden="true">
+                    {TRACK_ICON[tr.id]}
                   </span>
-                  <div className="flex-1">
-                    <p className="font-display text-2xl text-primary-fg">
-                      {tl(tr.labelKey)}
-                    </p>
-                    <p className="text-fg/70 text-sm mt-1">
-                      {tl(`trackDescriptions.${tr.id}`)}
-                    </p>
-                  </div>
-                  <span className="text-fg/40 text-2xl" aria-hidden="true">
-                    →
+                  <span
+                    className="font-display text-4xl text-primary-fg tabular-nums"
+                    aria-hidden="true"
+                  >
+                    {TRACK_GLYPHS[tr.id]}
                   </span>
                 </div>
               </Card>
@@ -92,18 +104,20 @@ export function TrackPicker() {
           ))}
       </div>
 
-      <div className="mt-6 flex gap-2">
+      <div className="mt-6 flex gap-3">
         <button
           type="button"
           onClick={() => void navigate('/leaderboard')}
-          className="px-4 py-2 rounded-soft bg-surface/60 text-fg font-display min-h-touch"
+          className="w-touch h-touch rounded-soft bg-surface/60 text-2xl"
+          aria-label="leaderboard"
         >
           🏆
         </button>
         <button
           type="button"
           onClick={() => void navigate('/rewards')}
-          className="px-4 py-2 rounded-soft bg-surface/60 text-fg font-display min-h-touch"
+          className="w-touch h-touch rounded-soft bg-surface/60 text-2xl"
+          aria-label="rewards"
         >
           🎁
         </button>
