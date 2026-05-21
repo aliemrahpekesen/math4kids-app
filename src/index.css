@@ -5,7 +5,13 @@
   --color-fg: #0b1437;
   --color-accent: #6366f1;
   color-scheme: light;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
