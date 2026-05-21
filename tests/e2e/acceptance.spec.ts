@@ -72,10 +72,13 @@ test.describe('Math4KidsApp — Acceptance Criteria (AC-01..AC-18)', () => {
     await page.getByRole('button', { name: /İleri/i }).click();
     // Skip email
     await page.getByRole('button', { name: /atla/i }).click();
-    // Should land on map
+    // Should land on map (TrackPicker first).
     await page.waitForURL('**/map');
-    // Track section heading proves the new two-track map rendered.
-    await expect(page.getByText(/Sayılar/i)).toBeVisible();
+    const numbersBtn = page.getByRole('button', { name: /🔢 Sayılar/ });
+    await expect(numbersBtn).toBeVisible();
+    // Enter the Numbers track to reach the per-tier level grid.
+    await numbersBtn.click();
+    await page.waitForURL('**/map/numbers');
     // L1 button enabled (regex anchored to "Level 1 —" so it doesn't match L10/L11)
     const l1 = page.getByRole('button', { name: /^Level 1 [—-]/ });
     await expect(l1).toBeEnabled();

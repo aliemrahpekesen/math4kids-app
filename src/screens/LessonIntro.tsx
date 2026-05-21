@@ -50,8 +50,17 @@ export function LessonIntro() {
         <h1 className="font-display text-3xl text-primary-fg mb-2">{title}</h1>
         <p className="text-fg/80 mb-6">{welcome}</p>
         <div className="flex flex-col gap-2">
+          {level.range && (
+            <Button
+              variant="primary"
+              onClick={() => void navigate(`/lesson/${levelId}/teach`)}
+              className="w-full"
+            >
+              {t('startTeach')}
+            </Button>
+          )}
           <Button
-            variant="primary"
+            variant={level.range ? 'ghost' : 'primary'}
             onClick={() => void navigate(`/lesson/${levelId}/practice`)}
             className="w-full"
           >

@@ -11,32 +11,47 @@ export type ExerciseTypeKey =
   | 'mixed-add-sub'
   | 'groups-of'
   | 'share-equally'
-  | 'mixed-review';
-
-export type TopicKey =
-  | 'numbers-1-5'
-  | 'counting-1-5'
-  | 'numbers-6-10'
-  | 'counting-6-10'
-  | 'match'
-  | 'compare'
-  | 'shapes'
-  | 'patterns'
-  | 'sorting'
-  | 'numbers-11-20'
-  | 'add'
-  | 'subtract'
-  | 'mixed-as'
-  | 'mult-foundations'
-  | 'div-foundations'
   | 'mixed-review'
-  | 'final';
+  // Medium / Hard additions:
+  | 'tap-number-2digit'
+  | 'tap-number-3digit'
+  | 'count-tens'
+  | 'place-value-2digit'
+  | 'place-value-3digit'
+  | 'compare-2digit'
+  | 'compare-3digit'
+  | 'skip-counting'
+  | 'mixed-review-2digit'
+  | 'mixed-review-3digit'
+  | 'add-numeric'
+  | 'sub-numeric'
+  | 'add-2digit-no-carry'
+  | 'sub-2digit-no-regroup'
+  | 'add-2digit-carry'
+  | 'sub-2digit-regroup'
+  | 'mult-small'
+  | 'div-small'
+  | 'mult-1d-by-2d'
+  | 'div-with-remainder'
+  | 'add-3digit'
+  | 'sub-3digit'
+  | 'mixed-review-ops-medium'
+  | 'mixed-review-ops-hard';
+
+/** Topic identifier used as an i18n key for level titles. Loose typing — */
+/** path.json drives this so adding levels doesn't require code changes. */
+export type TopicKey = string;
 
 export type TrackId = 'numbers' | 'operations';
+
+export type LevelDifficulty = 'easy' | 'medium' | 'hard';
 
 export interface LevelDescriptor {
   id: number;
   track: TrackId;
+  /** Which difficulty tier this level belongs to. The map filters by the */
+  /** active profile's difficulty so each tier sees its own curriculum. */
+  difficulty: LevelDifficulty;
   topic: TopicKey;
   exerciseTypes: ExerciseTypeKey[];
   prereq: number | null;

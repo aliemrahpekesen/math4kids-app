@@ -58,4 +58,9 @@ export function scoreStars(
   return 0;
 }
 
-export const DEFAULT_DIFFICULTY: Difficulty = 'medium';
+/**
+ * New children default to `easy` so onboarding lands on the single-digit
+ * 0–9 tier with multi-representation teaching. Parents bump this from the
+ * profile management screen when the child is ready for 2- or 3-digit work.
+ */
+export const DEFAULT_DIFFICULTY: Difficulty = 'easy';

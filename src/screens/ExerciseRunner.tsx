@@ -163,6 +163,97 @@ function ExerciseVisual({ exercise }: { exercise: Exercise }) {
         </div>
       );
     }
+    case 'count-tens': {
+      const tens = (meta.tens as number) ?? 0;
+      const ones = (meta.ones as number) ?? 0;
+      return (
+        <div className="py-4">
+          <div className="text-fg/70 text-xs mb-1">Onluklar</div>
+          <div className="flex flex-wrap justify-center gap-1 mb-3">
+            {Array.from({ length: tens }, (_, i) => (
+              <span key={i} className="text-2xl" aria-hidden="true">
+                🟦
+              </span>
+            ))}
+          </div>
+          <div className="text-fg/70 text-xs mb-1">Birlikler</div>
+          <div className="flex flex-wrap justify-center gap-1">
+            {Array.from({ length: ones }, (_, i) => (
+              <span key={i} className="text-2xl" aria-hidden="true">
+                🟨
+              </span>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    case 'place-value-2digit': {
+      const n = (meta.n as number) ?? 0;
+      return (
+        <div className="py-4 text-center">
+          <div className="font-display text-5xl text-primary-fg tabular-nums">
+            {n}
+          </div>
+        </div>
+      );
+    }
+    case 'place-value-3digit': {
+      const n = (meta.n as number) ?? 0;
+      return (
+        <div className="py-4 text-center">
+          <div className="font-display text-5xl text-primary-fg tabular-nums">
+            {n}
+          </div>
+        </div>
+      );
+    }
+    case 'skip-counting': {
+      const display = (meta.display as string[] | undefined) ?? [];
+      return (
+        <div className="flex items-center justify-center gap-2 text-2xl py-4 flex-wrap tabular-nums">
+          {display.map((tok, i) => (
+            <span
+              key={i}
+              className={
+                tok === '?'
+                  ? 'bg-accent/30 rounded-soft px-3 py-1 font-display'
+                  : 'font-display'
+              }
+            >
+              {tok}
+            </span>
+          ))}
+        </div>
+      );
+    }
+    case 'tap-number-2digit':
+    case 'tap-number-3digit': {
+      const n = (meta.n as number) ?? 0;
+      return (
+        <div className="py-2 text-center text-fg/70 text-sm">
+          ({n})
+        </div>
+      );
+    }
+    case 'add-numeric':
+    case 'sub-numeric':
+    case 'add-2digit-no-carry':
+    case 'sub-2digit-no-regroup':
+    case 'add-2digit-carry':
+    case 'sub-2digit-regroup':
+    case 'mult-small':
+    case 'div-small':
+    case 'mult-1d-by-2d':
+    case 'div-with-remainder':
+    case 'add-3digit':
+    case 'sub-3digit': {
+      const expr = (meta.expression as string) ?? '';
+      return (
+        <div className="py-4 font-display text-4xl text-primary-fg tabular-nums text-center">
+          {expr} = ?
+        </div>
+      );
+    }
     default:
       return null;
   }
