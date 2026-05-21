@@ -102,7 +102,9 @@ export function LessonQuiz() {
   if (!currentExercise || done) {
     return (
       <main className="app-shell">
-        <p className="text-fg/80 font-display">{t('complete')}</p>
+        <div className="text-7xl" aria-label={t('complete')}>
+          ✨
+        </div>
       </main>
     );
   }
@@ -125,9 +127,6 @@ export function LessonQuiz() {
           max={quiz.items.length}
           label="quiz progress"
         />
-        <div className="text-fg/60 text-sm mt-1 text-center">
-          {index + 1} / {quiz.items.length}
-        </div>
       </div>
       <ExerciseRunner
         exercise={currentExercise}
@@ -140,7 +139,12 @@ export function LessonQuiz() {
         variant={feedback === 'correct' ? 'success' : 'warning'}
         durationMs={700}
       >
-        {feedback === 'correct' ? t('correct') : t('tryAgain')}
+        <span
+          className="text-3xl"
+          aria-label={feedback === 'correct' ? t('correct') : t('tryAgain')}
+        >
+          {feedback === 'correct' ? '✨' : '💪'}
+        </span>
       </Toast>
     </>
   );

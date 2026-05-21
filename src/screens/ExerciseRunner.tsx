@@ -1,6 +1,17 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, NumeralTile, StarRow, TouchTarget } from '../ui';
+import { Card, NumeralTile, TouchTarget } from '../ui';
+import { useAudio } from '../audio/AudioProvider';
+import { useSettingsStore } from '../state/settingsStore';
 import type { Exercise } from '../engines/types';
+
+/** Map shape-key text options to glyphs so the child sees a picture, not a word. */
+const SHAPE_GLYPH: Record<string, string> = {
+  circle: '🔵',
+  square: '🟦',
+  triangle: '🔺',
+  rectangle: '▬',
+};
 
 interface ExerciseRunnerProps {
   exercise: Exercise;
@@ -15,9 +26,19 @@ export function ExerciseRunner({
   hintsUsed = 0,
 }: ExerciseRunnerProps) {
   const { t } = useTranslation('lesson');
+  const audio = useAudio();
+  const language = useSettingsStore((s) => s.language);
 
   const promptVars: Record<string, unknown> = exercise.meta ?? {};
   const promptText = t(exercise.prompt, promptVars);
+
+  // Narrate the prompt on entry — this is the child's only "reading" channel.
+  useEffect(() => {
+    audio.speak(promptText, language);
+    return () => {
+      audio.stopSpeaking();
+    };
+  }, [audio, language, promptText]);
 
   const checkAndFire = (picked: string) => {
     const correct = picked === exercise.correctAnswer;
@@ -27,7 +48,14 @@ export function ExerciseRunner({
   return (
     <main className="app-shell">
       <Card className="max-w-md w-full text-center">
-        <h2 className="font-display text-xl text-fg/90 mb-4">{promptText}</h2>
+        <button
+          type="button"
+          onClick={() => audio.speak(promptText, language)}
+          aria-label={promptText}
+          className="block mx-auto mb-2 w-touch h-touch rounded-full bg-surface/60 text-2xl"
+        >
+          🔊
+        </button>
         <ExerciseVisual exercise={exercise} />
         <div className="grid grid-cols-2 gap-3 mt-6">
           {exercise.options.map((opt) => {
@@ -41,20 +69,25 @@ export function ExerciseRunner({
                 />
               );
             }
+            const glyph = SHAPE_GLYPH[opt];
             return (
               <TouchTarget
                 key={opt}
                 onClick={() => checkAndFire(opt)}
-                className="bg-surface text-fg hover:bg-primary hover:text-primary-fg rounded-soft"
+                aria-label={opt}
+                className="bg-surface text-fg hover:bg-primary hover:text-primary-fg rounded-soft text-4xl"
               >
-                {opt}
+                {glyph ?? opt}
               </TouchTarget>
             );
           })}
         </div>
         {hintsUsed > 0 && (
-          <div className="mt-4 text-fg/60 text-sm">
-            <StarRow stars={3} size="sm" /> {t('hint')} × {hintsUsed}
+          <div
+            className="mt-4 text-2xl"
+            aria-label={`${t('hint')} × ${hintsUsed}`}
+          >
+            {'💡'.repeat(Math.min(hintsUsed, 5))}
           </div>
         )}
       </Card>
@@ -136,8 +169,13 @@ function ExerciseVisual({ exercise }: { exercise: Exercise }) {
       );
     }
     case 'shape-tap': {
-      // We don't have a real shape gallery yet; render the target name large.
-      return null;
+      const target = (meta.shape as string) ?? 'circle';
+      const glyph = SHAPE_GLYPH[target] ?? '⬛';
+      return (
+        <div className="py-4 text-6xl" aria-hidden="true">
+          {glyph}
+        </div>
+      );
     }
     case 'share-equally': {
       const total = (meta.total as number) ?? 0;

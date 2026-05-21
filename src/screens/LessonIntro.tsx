@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Button, Card, CharacterAvatar } from '../ui';
+import { Card, CharacterAvatar } from '../ui';
 import { getLevelById } from '../engines/curriculum';
 import { useAudio } from '../audio/AudioProvider';
 import { useSettingsStore } from '../state/settingsStore';
@@ -28,13 +28,22 @@ export function LessonIntro() {
   if (!level) {
     return (
       <main className="app-shell">
-        <p className="text-fg/70">Bilinmeyen seviye</p>
-        <Button variant="primary" onClick={() => void navigate('/map')}>
-          {t('backToMap')}
-        </Button>
+        <button
+          type="button"
+          onClick={() => void navigate('/map')}
+          aria-label={t('backToMap')}
+          className="w-touch h-touch rounded-soft bg-surface/60 text-3xl"
+        >
+          🏠
+        </button>
       </main>
     );
   }
+
+  const onPlay = () => {
+    const next = level.range ? 'teach' : 'practice';
+    void navigate(`/lesson/${levelId}/${next}`);
+  };
 
   return (
     <main className="app-shell">
@@ -43,37 +52,18 @@ export function LessonIntro() {
           type="button"
           onClick={() => audio.speak(welcome, language)}
           aria-label="Replay narration"
-          className="block mx-auto mb-3"
+          className="block mx-auto mb-6"
         >
           <CharacterAvatar avatarKey="space-astronaut" size="lg" />
         </button>
-        <h1 className="font-display text-3xl text-primary-fg mb-2">{title}</h1>
-        <p className="text-fg/80 mb-6">{welcome}</p>
-        <div className="flex flex-col gap-2">
-          {level.range && (
-            <Button
-              variant="primary"
-              onClick={() => void navigate(`/lesson/${levelId}/teach`)}
-              className="w-full"
-            >
-              {t('startTeach')}
-            </Button>
-          )}
-          <Button
-            variant={level.range ? 'ghost' : 'primary'}
-            onClick={() => void navigate(`/lesson/${levelId}/practice`)}
-            className="w-full"
-          >
-            {t('startPractice')}
-          </Button>
-          <Button
-            variant="ghost"
-            onClick={() => void navigate(`/lesson/${levelId}/quiz`)}
-            className="w-full"
-          >
-            {t('skipPractice')}
-          </Button>
-        </div>
+        <button
+          type="button"
+          onClick={onPlay}
+          aria-label={t('startTeach')}
+          className="mx-auto block w-28 h-28 rounded-full bg-accent text-accent-fg text-6xl shadow-glow active:scale-95 transition-transform"
+        >
+          ▶
+        </button>
       </Card>
     </main>
   );
