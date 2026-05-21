@@ -1,0 +1,55 @@
+# Claude Code + spec-first workflow infrastructure (local-only, do not commit)
+.claude/
+.specify/
+.scoping_documents/
+.docs/
+docs/
+.github/
+.mcp.json
+CLAUDE.md
+
+# All markdown at root EXCEPT README.md and LICENSE (which is .txt-shaped)
+/*.md
+!README.md
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# Build outputs (project-agnostic defaults; refine per stack after scoping)
+node_modules/
+dist/
+build/
+.next/
+.turbo/
+.cache/
+target/
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+
+# Coverage and test artifacts
+coverage/
+.nyc_output/
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Secrets (defense-in-depth; secret-scan hook is primary)
+*.pem
+*.key
+*.p12
+*.pfx
+.secrets/
